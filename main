@@ -1,0 +1,108 @@
+\documentclass[100pt]{article}
+\usepackage[italian,american]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{minted}
+\usepackage[a4paper, left=0.911in, right=0.911in]{geometry}
+\usepackage{hyperref}
+\usepackage{calc}
+\usepackage{listings}
+
+\usepackage{xcolor}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+\definecolor{bluino}{RGB}{4, 55, 242}
+\definecolor{carota}{rgb}{0.93, 0.57, 0.13}
+\definecolor{black}{rgb}{0.0, 0.0, 0.0}
+\definecolor{rosino}{rgb}{0.87, 0.36, 0.51}
+\definecolor{cadetblue}{rgb}{0.1, 0.1, 0.70}
+\pagenumbering{arabic}
+\pagestyle{plain}
+
+\begin{document}
+
+\fancyhf{}
+\fancyhead[R]{Daniele Bugatti \\ Foundations of Data Science \\ ETH Zürich} 
+
+\renewcommand\headrulewidth{0pt}
+\pagestyle{fancy}
+
+\begin{huge}
+\begin{center}
+\hfill \break
+Project progress report
+\end{center}
+\end{huge}
+
+\begin{LARGE}
+\hfill\break
+1. a brief literature review motivating your project,
+\\
+\end{LARGE}
+
+\begin{Large}
+1.1 placeholder
+\hfill\break
+\end{Large}
+
+\begin{normalsize}\color {bluino}
+1.1.1	placeholder\\
+\end{normalsize}
+
+\begin{normalsize}
+I am not gonna lose time on this. 
+\end{normalsize}
+
+\begin{LARGE}
+\hfill\break
+2. data preprocessing and visualisation,
+\\
+\end{LARGE}
+
+\begin{Large}
+1.1 placeholder
+\hfill\break
+\end{Large}
+
+\begin{normalsize}\color {bluino}
+1.1.1	placeholder\\
+\end{normalsize}
+
+\begin{normalsize}
+VL1:	Our data is UNSTRUCTURED, meaning that the stored data doesn't follow a rational order: it is like an endless amount of columns with no names and description. 
+
+VL2: Our data contains no NA. Therefore, it is not needed to adopt any kind of handling method. 
+\end{normalsize}
+
+
+
+
+
+\begin{LARGE}
+References\\
+\end{LARGE}
+
+
+
+\begin{normalsize}
+[(1)]	Pandas Guide, Group By \url{https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.groupby.html}\break
+[(2)]	Pandas Guide, Reset Index \url{https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.reset_index.html}\break
+[(3)]	Pandas Guide, Merge \url{https://pandas.pydata.org/docs/reference/api/pandas.merge.html}\break
+[(4)]	Seaborn Guide \url{https://seaborn.pydata.org/tutorial/introduction.html}\break
+\end{normalsize}
+
+
+
+
+
+
+%%				cd /Users/user/Desktop/PYTHON/project/latex			pdflatex -shell-escape Main.tex
+
+
+\end{document}
+
