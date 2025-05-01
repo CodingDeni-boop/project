@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
 features=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_features.csv")
 labels=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_labels.csv")
 data=features.merge(labels)
@@ -12,7 +13,7 @@ data=features.merge(labels)
 
 ###  6000 SUBPLOTS PLOTTER  ###
 """
-fig, axes=plt.subplots(nrows=600,ncols=10,figsize=(20,250))
+fig, axes=plt.subplots(nrows=600,ncols=10,figsize=(35,400))
 for i in range(0,data.shape[1]-2):
     sns.histplot(data=data,x=data.iloc[:,i],y=data["label"],ax=axes[int(i/10)][int(i%10)])
     print(i)
@@ -42,6 +43,16 @@ fig = plt.figure(figsize=(6,6))
 sns.countplot(data=data,x="label",hue="type")
 plt.savefig("../output/M1-M2 vs label")
 """
+
+###CHECK FOR DOUBLES
+
+if data.equals(data.drop_duplicates()):
+    print("dataset has no duplicates")
+else:
+    data=data.drop_duplicates()
+    print("dataset had duplicates and they have been dropped")
+
+
 
 
 
