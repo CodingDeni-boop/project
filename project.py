@@ -3,14 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
 features=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_features.csv")
 labels=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_labels.csv")
 data=features.merge(labels)
-
-#QOGNQEG
-
-
 
 ###  6000 SUBPLOTS PLOTTER  ###
 """
@@ -53,8 +48,4 @@ else:
     data=data.drop_duplicates()
     print("dataset had duplicates and they have been dropped")
 
-
-
-
-
-
+## MAYBE DO A CORRELATION MATRIX INSTEAD OF 6000 ENDLESS SUBPLOTTER :)
