@@ -3,8 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-features=pd.read_csv("../../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_features.csv")
-labels=pd.read_csv("../../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_labels.csv")
+features=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_features.csv")
+labels=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_labels.csv")
 data=features.merge(labels)
 
 ###  6000 SUBPLOTS PLOTTER  ###
