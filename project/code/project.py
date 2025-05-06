@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import sklearn.dummy as skd
 
 features=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_features.csv")
 labels=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_labels.csv")
@@ -22,7 +23,7 @@ print("figure saved!")
 datana=data.isna()
 print(f"dataset has {np.sum(np.sum(datana,axis=1))} NA")
 
-## I DONT LIKE NAMES 0798f178-95d5-4e92-ad63-831cf50605b5_MALDI2, I WANT MALDI2, THAT'S IT, THEIR NAME WILL BE THEIR INDEX.
+## I DONT LIKE NAMES 0798f178-95d5-4e92-ad63-831cf50605b5_MALDI2, I WANT MALDI2, THAT'S IT, THEIR NAME WILL BE THEIR INDEX. ACTUALLY, M1=0, M2=1
 data = data.rename(columns={"Unnamed: 0" : "type"})
 M1 = np.sum(data.loc[:,"type"].str.contains("MALDI1"))
 M2 = np.sum(data.loc[:,"type"].str.contains("MALDI2"))
@@ -48,5 +49,21 @@ else:
     data=data.drop_duplicates()
     print("dataset had duplicates and they have been dropped")
 
-## MAYBE DO A CORRELATION MATRIX INSTEAD OF 6000 ENDLESS SUBPLOTTER :)
+##CREATE DUMMIES FROM M1 - M2 STRINGS TO TRUE FALSE M2 DUMMIES
+dummies=pd.get_dummies(data["type"],drop_first=True)
+dummies.reset_index(inplace=True)
+data.reset_index(inplace=True)
+data=data.merge(dummies,on="index",how="left")
+data=data.drop(["type","index"],axis=1)
+data["M2"]=data["M2"].astype(float)
+corr=data.corr()
+
+###HEATMAP PLOTTER
+"""
+plt.figure(figsize=(300,300))
+sns.heatmap(corr)
+plt.savefig("../output/heatmap")
+print("plotted")
+"""
+
 
