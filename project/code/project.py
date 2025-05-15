@@ -77,6 +77,7 @@ def splitData(data):
     return tune, test
 
 ### K - FOLD:    SPLITTING INTO 5, ACCESSIBLE THROUGH LIST, SHUFFLE TRUE
+### K - FOLD:    SPLITTING INTO 5, ACCESSIBLE THROUGH LIST, SHUFFLE TRUE
 def kfolderino(data):
     traininglist = []
     validatelist = []
@@ -86,6 +87,59 @@ def kfolderino(data):
         validatelist.append(tune.iloc[validate,:])
     print("K-fold success")
     return validatelist, traininglist
+
+### kNN
+def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
+    """
+    Führt kNN-Klassifikation für verschiedene Korrelationsschwellen und k-Werten durch.
+    Filtert vorab nicht-numerische Features heraus.
+    Gibt DataFrame mit allen Ergebnissen und die beste Parameter-Kombination zurück.
+    """
+    if thresholds is None:
+        thresholds = np.arange(0.1, 1.0, 0.1)
+    if k_list is None:
+        k_list = list(range(1, 21, 2))
+
+    # Merkmale und Label trennen
+    X = data.drop("label", axis=1)
+    y = data["label"]
+
+    # Nur numerische Features für Korrelationsanalyse
+    X_numeric = X.select_dtypes(include=[np.number])
+    dropped = X.shape[1] - X_numeric.shape[1]
+    if dropped > 0:
+        print(f"Hinweis: {dropped} nicht-numerische Features wurden vor der Korrelation entfernt.")
+
+    # Korrelation der numerischen Features mit dem Label berechnen
+    correlations = X_numeric.apply(lambda col: col.corr(y))
+    results = []
+
+    for thresh in thresholds:
+        # Features mit absoluter Korrelation >= Schwelle auswählen
+        selected = correlations[correlations.abs() >= thresh].index.tolist()
+        if not selected:
+            continue
+        X_sel = X_numeric[selected]
+        for k in k_list:
+            knn = KNeighborsClassifier(n_neighbors=k)
+            scores = skm.cross_val_score(knn, X_sel, y, cv=cv)
+            results.append({"threshold": thresh, "k": k, "mean_score": scores.mean()})
+
+    # Ergebnisse zusammenfassen
+    results_df = pd.DataFrame(results)
+    if results_df.empty:
+        raise ValueError("Keine Kombination von Features und Parametern gefunden. Schwellenwerte oder Daten prüfen.")
+
+    # Beste Parameter-Kombination ermitteln
+    best = results_df.loc[results_df["mean_score"].idxmax()]
+    return results_df, best
+
+# Beispielaufruf der neuen Funktion
+results_df, best_params = knn_with_corr_filter(data)
+print("Beste Parameter:", best_params)
+print(results_df.sort_values("mean_score", ascending=False).head(10))
+
+
 
 ###     USING FUNCTIONS
 checkna(data)
