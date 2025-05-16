@@ -4,6 +4,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import sklearn.dummy as skd
 import sklearn.model_selection as skm
+import sklearn.feature_selection as fs
+import sklearn.linear_model as sklm
+import time
+import sklearn.ensemble as ske
+import sklearn.metrics as skmtr
+import sklearn.svm as svm
+
+
+start_time = time.time()
+
+
 
 features=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_features.csv")
 labels=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_labels.csv")
@@ -87,6 +98,157 @@ def kfolderino(data):
     print("K-fold success")
     return validatelist, traininglist
 
+def checkImbalance(data):
+    print(f"Data is unbalanced: {data["label"].sum(axis=0)/data.shape[0]} resistant bacteria sample and {1-data["label"].sum(axis=0)/data.shape[0]} non resistant bacteria samples")
+
+def train_random_forest(tune_df, cv_splits=5, random_state=2025):
+    """
+    Tune a RandomForestClassifier on ⁠ tune_df ⁠.
+    Assumes ⁠ tune_df ⁠ has a 'label' column and all other columns are numeric features.
+    Returns the best‐found RF model.
+    """
+    # Split X / y
+    X_tune = tune_df.drop(columns=["label"])
+    y_tune = tune_df["label"].astype(int)
+    
+    # Parameter grid
+    param_grid = {
+        "n_estimators": [100, 300, 500],
+        "max_depth": [None, 10, 20],
+        "min_samples_split": [2, 5, 10],
+    }
+    
+    # RandomForest with balanced class weights
+    rf = ske.RandomForestClassifier(
+        random_state=random_state,
+        class_weight="balanced"
+    )
+    grid = skm.GridSearchCV(
+        estimator=rf,
+        param_grid=param_grid,
+        cv=cv_splits,
+        scoring="roc_auc",
+        n_jobs=-1,
+        verbose=2
+    )
+    
+    print("Starting RF GridSearchCV…")
+    grid.fit(X_tune, y_tune)
+    print(f"Best params: {grid.best_params_}")
+    print(f"Best CV ROC AUC: {grid.best_score_:.4f}")
+    
+    return grid.best_estimator_
+
+
+def evaluate_on_test(model, test_df):
+    """
+    Evaluate model on test_df.
+    Prints classification report, confusion matrix, and ROC AUC.
+    """
+    X_test = test_df.drop(columns=["label"])
+    y_test = test_df["label"].astype(int)
+    
+    y_pred = model.predict(X_test)
+    y_proba = model.predict_proba(X_test)[:, 1]
+    
+    print("\n--- Test Set Evaluation ---")
+    print("Classification Report:")
+    print(skmtr.classification_report(y_test, y_pred))
+    
+    cm = skmtr.confusion_matrix(y_test, y_pred)
+    print("Confusion Matrix:")
+    print(cm)
+    
+    auc = skmtr.roc_auc_score(y_test, y_proba)
+    print(f"Test ROC AUC: {auc:.4f}")
+
+
+##LOGISTIC REGRESSION 
+def logreg(data):
+    X = data.drop(columns=["label"])
+    y = data["label"]
+
+    # Separation
+    X_train, X_test, y_train, y_test = skm.train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # model with L2-Regularisierung (Ridge)
+    logreg = sklm.LogisticRegression(penalty='l2', solver='liblinear',class_weight="balanced")
+
+    # Forward Selection
+    sfs = fs.SequentialFeatureSelector(logreg,
+            n_features_to_select=100,  ##(n_features = 10 is runnable, 100 is insanely slow)
+            direction="forward",
+            scoring='accuracy',
+            cv=5)
+
+    sfs.fit(X_train, y_train)
+    print('Ausgewählte Merkmale:', sfs.feature_names_in_)
+
+    #regulatory logistic regression (Lasso/Ridge)
+    from sklearn.linear_model import LogisticRegressionCV
+
+    # Ridge (L2) oder Lasso (L1)
+    model = LogisticRegressionCV(
+        Cs=10,
+        cv=5,
+        penalty='l1',  # oder 'l2'
+        solver='liblinear',  # für L1
+        scoring='accuracy',
+        max_iter=1000
+    )
+
+    # training just with the featured selection
+    X_train_selected = X_train[list(sfs.feature_names_in_)]
+    X_test_selected = X_test[list(sfs.feature_names_in_)]
+
+    model.fit(X_train_selected, y_train)
+
+    #model classification
+    from sklearn.metrics import classification_report, confusion_matrix
+
+    y_pred = model.predict(X_test_selected)
+
+    print("Classification Report:\n", classification_report(y_test, y_pred))
+    print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+    print("Beste C (Regularisierungsparameter):", model.C_)
+
+    cm = confusion_matrix(y_test, y_pred)
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+    plt.xlabel("Vorhergesagt")
+    plt.ylabel("Tatsächlich")
+    plt.title("Confusion Matrix")
+    plt.savefig("../output/logreg_confusion_matrix")
+
+## SVM with univariate filter
+
+def univariatefilter(tune):
+    tuney=tune.loc[:,"label"]
+    tunex=tune.drop(columns="label")
+    uvfs=fs.SelectKBest(fs.f_classif,k=100)            ## 700 for 0.05 significance, 3500 for 95% variance explaination
+    x_uvfs = uvfs.fit_transform(tunex,tuney)
+    print(uvfs.get_feature_names_out())
+    index=uvfs.get_support(indices=True)
+    score=uvfs.scores_[index]/np.sum(uvfs.scores_)
+    pval=(uvfs.pvalues_[index])
+    tab=[index,score,pval]
+    tab.sort(key="score")
+    print(f"Highest p-value:    {(uvfs.pvalues_[index]).max()}")
+    print(f"Sum of the total explained variance:      {(uvfs.scores_[index]/np.sum(uvfs.scores_)).sum()}")
+    plt.figure(figsize=(6,6))
+    sns.scatterplot(y=tunex[tab[0,["index"]]],x=tunex[tab[1,["index"]]],hue=tuney)
+    plt.title("Selected feature 1 vs feature 2")
+
+
+    return tab
+
+def svmModel(filtered_dataset):
+    print()
+
+
+
+
+
+
 ###     USING FUNCTIONS
 checkna(data)
 data=drop_duplicates(data)
@@ -94,5 +256,29 @@ data=maldiRename(data)
 data=createDummies(data)
 tune, test = splitData(data)
 validatelist, traininglist = kfolderino(data)
+checkImbalance(data)
+#logreg(data)
+
+## RANDOM FOREST
+
+best_rf = train_random_forest(tune)
+evaluate_on_test(best_rf, test)
+
+# Optional: feature importances
+importances = best_rf.feature_importances_
+feat_names = test.drop(columns=["label"]).columns
+feat_imp_df = pd.DataFrame({
+    "feature": feat_names,
+    "importance": importances
+}).sort_values("importance", ascending=False)
+
+print("\nTop 10 feature importances:")
+print(feat_imp_df.head(10))
 
 
+
+
+
+
+
+print("--- %s seconds ---" % (time.time() - start_time))
