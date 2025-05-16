@@ -10,7 +10,7 @@ import time
 import sklearn.ensemble as ske
 import sklearn.metrics as skmtr
 import sklearn.svm as svm
-
+import sklearn.neighbors as skn
 
 start_time = time.time()
 
@@ -87,19 +87,6 @@ def splitData(data):
     print(f"tune: {tune.shape}\n test: {test.shape}")
     return tune, test
 
-### K - FOLD:    SPLITTING INTO 5, ACCESSIBLE THROUGH LIST, SHUFFLE TRUE
-### K - FOLD:    SPLITTING INTO 5, ACCESSIBLE THROUGH LIST, SHUFFLE TRUE
-def kfolderino(data):
-    traininglist = []
-    validatelist = []
-    kfolder = skm.KFold(n_splits = 5,shuffle=True,random_state=2025)
-    for train, validate in kfolder.split(tune):
-        traininglist.append(tune.iloc[train,:])
-        validatelist.append(tune.iloc[validate,:])
-    print("K-fold success")
-    return validatelist, traininglist
-
-<<<<<<< HEAD
 def checkImbalance(data):
     print(f"Data is unbalanced: {data["label"].sum(axis=0)/data.shape[0]} resistant bacteria sample and {1-data["label"].sum(axis=0)/data.shape[0]} non resistant bacteria samples")
 
@@ -221,32 +208,6 @@ def logreg(data):
     plt.title("Confusion Matrix")
     plt.savefig("../output/logreg_confusion_matrix")
 
-## SVM with univariate filter
-
-def univariatefilter(tune):
-    tuney=tune.loc[:,"label"]
-    tunex=tune.drop(columns="label")
-    uvfs=fs.SelectKBest(fs.f_classif,k=100)            ## 700 for 0.05 significance, 3500 for 95% variance explaination
-    x_uvfs = uvfs.fit_transform(tunex,tuney)
-    print(uvfs.get_feature_names_out())
-    index=uvfs.get_support(indices=True)
-    score=uvfs.scores_[index]/np.sum(uvfs.scores_)
-    pval=(uvfs.pvalues_[index])
-    tab=[index,score,pval]
-    tab.sort(key="score")
-    print(f"Highest p-value:    {(uvfs.pvalues_[index]).max()}")
-    print(f"Sum of the total explained variance:      {(uvfs.scores_[index]/np.sum(uvfs.scores_)).sum()}")
-    plt.figure(figsize=(6,6))
-    sns.scatterplot(y=tunex[tab[0,["index"]]],x=tunex[tab[1,["index"]]],hue=tuney)
-    plt.title("Selected feature 1 vs feature 2")
-
-
-    return tab
-
-def svmModel(filtered_dataset):
-    print()
-
-
 
 ### kNN
 def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
@@ -281,7 +242,7 @@ def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
             continue
         X_sel = X_numeric[selected]
         for k in k_list:
-            knn = KNeighborsClassifier(n_neighbors=k)
+            knn = skn.KNeighborsClassifier(n_neighbors=k)
             scores = skm.cross_val_score(knn, X_sel, y, cv=cv)
             results.append({"threshold": thresh, "k": k, "mean_score": scores.mean()})
 
@@ -293,13 +254,46 @@ def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
     # Beste Parameter-Kombination ermitteln
     best = results_df.loc[results_df["mean_score"].idxmax()]
     return results_df, best
-
+"""
 # Beispielaufruf der neuen Funktion
 results_df, best_params = knn_with_corr_filter(data)
 print("Beste Parameter:", best_params)
 print(results_df.sort_values("mean_score", ascending=False).head(10))
 
 
+"""
+## SVM with univariate filter
+
+def filter(tune,k):
+    y_tune=tune["label"]
+    X_tune=tune.drop(columns="label")
+    filter=fs.SelectKBest(k=k)
+    filter.fit_transform(X_tune,y_tune)
+    index=filter.get_support()
+    X_filtered=X_tune.iloc[:,index]
+    p_val=filter.pvalues_[index]
+    variances=filter.scores_[index]/filter.scores_.sum()
+    print(f"Highest P value for k = {k}:    {p_val.max()}")
+    print(f"Explained Variance for k = {k}:    {variances.sum()}")
+    return X_filtered, y_tune
+
+
+def svmModel(tune):
+    for k in [1000,1250,1500,1750,2000]:
+        X,y = filter(tune,k=k)
+        
+        model=svm.SVC(class_weight="balanced")
+        hyperparameters={
+            "C" : [0.01,0.1,1,10,100],
+            "kernel" : ['linear', 'poly', 'rbf', 'sigmoid', 'precomputed'],
+        }
+        grid = skm.GridSearchCV(
+            estimator=model,
+            param_grid=hyperparameters,
+            scoring="f1",     # Metric for evaluation
+            cv=5,                   # 5-fold cross-validation
+            verbose=2               # Display the process
+        )      
 
 
 ###     USING FUNCTIONS
@@ -308,12 +302,12 @@ data=drop_duplicates(data)
 data=maldiRename(data)
 data=createDummies(data)
 tune, test = splitData(data)
-validatelist, traininglist = kfolderino(data)
 checkImbalance(data)
+svmModel(tune)
 #logreg(data)
 
 ## RANDOM FOREST
-
+"""
 best_rf = train_random_forest(tune)
 evaluate_on_test(best_rf, test)
 
@@ -327,11 +321,6 @@ feat_imp_df = pd.DataFrame({
 
 print("\nTop 10 feature importances:")
 print(feat_imp_df.head(10))
-
-
-
-
-
-
+"""
 
 print("--- %s seconds ---" % (time.time() - start_time))
