@@ -157,6 +157,8 @@ def logreg(data):
     X = data.drop(columns=["label"])
     y = data["label"]
 
+    n_features=100
+
     # Separation
     X_train, X_test, y_train, y_test = skm.train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -165,7 +167,7 @@ def logreg(data):
 
     # Forward Selection
     sfs = fs.SequentialFeatureSelector(logreg,
-            n_features_to_select=10,  ##(n_features = 10 is runnable, 100 is insanely slow)
+            n_features_to_select=n_features,  ##(n_features = 10 is runnable, 100 is insanely slow, ideal would be 500?) RUNNING OVERNIGHT WITH 100
             direction="forward",
             scoring='accuracy',
             cv=5)
@@ -207,6 +209,7 @@ def logreg(data):
     plt.ylabel("Tatsächlich")
     plt.title("Confusion Matrix")
     plt.savefig("../output/logreg_confusion_matrix")
+    print(f"logistic regression plotted with {n_features}")
 
 
 ### kNN
@@ -291,7 +294,7 @@ def svmModel(tune):
         model=svm.SVC(class_weight="balanced",probability=True)
         hyperparameters={
 
-            "C" : [1,10,100,150,200],
+            "C" : [10,100,125,150,175],
             "kernel" : ['linear', 'poly', 'rbf', 'sigmoid']
         }
         grid = skm.GridSearchCV(
@@ -342,6 +345,7 @@ checkImbalance(data)
 svmFit,featuresIndex = svmModel(tune)
 testSvm(svmFit,featuresIndex,test)
 logreg(data)
+
 
 ## RANDOM FOREST
 
