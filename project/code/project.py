@@ -165,7 +165,7 @@ def logreg(data):
 
     # Forward Selection
     sfs = fs.SequentialFeatureSelector(logreg,
-            n_features_to_select=100,  ##(n_features = 10 is runnable, 100 is insanely slow)
+            n_features_to_select=10,  ##(n_features = 10 is runnable, 100 is insanely slow)
             direction="forward",
             scoring='accuracy',
             cv=5)
@@ -254,14 +254,14 @@ def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
     # Beste Parameter-Kombination ermitteln
     best = results_df.loc[results_df["mean_score"].idxmax()]
     return results_df, best
-"""
+
 # Beispielaufruf der neuen Funktion
 results_df, best_params = knn_with_corr_filter(data)
 print("Beste Parameter:", best_params)
 print(results_df.sort_values("mean_score", ascending=False).head(10))
 
 
-"""
+
 ## SVM with univariate filter
 
 def filter(tune,k):
@@ -275,17 +275,24 @@ def filter(tune,k):
     variances=filter.scores_[index]/filter.scores_.sum()
     print(f"Highest P value for k = {k}:    {p_val.max()}")
     print(f"Explained Variance for k = {k}:    {variances.sum()}")
-    return X_filtered, y_tune
+    return X_filtered, y_tune, index
+
+
 
 
 def svmModel(tune):
-    for k in [1000,1250,1500,1750,2000]:
-        X,y = filter(tune,k=k)
-        
-        model=svm.SVC(class_weight="balanced")
+    bestScore=-1
+    train, validate = splitData(tune)
+    y_validate=validate.loc[:,"label"]
+    X_validate=validate.drop(columns="label")
+    fits=[]
+    for k in [750,1000,1250,1500,1750]:
+        X,y,index = filter(train,k=k)
+        model=svm.SVC(class_weight="balanced",probability=True)
         hyperparameters={
-            "C" : [0.01,0.1,1,10,100],
-            "kernel" : ['linear', 'poly', 'rbf', 'sigmoid', 'precomputed'],
+
+            "C" : [1,10,100,150,200],
+            "kernel" : ['linear', 'poly', 'rbf', 'sigmoid']
         }
         grid = skm.GridSearchCV(
             estimator=model,
@@ -294,6 +301,35 @@ def svmModel(tune):
             cv=5,                   # 5-fold cross-validation
             verbose=2               # Display the process
         )      
+        grid.fit(y=y,X=X)
+        X_tempValidator=X_validate.iloc[:,index]
+        y_pred=grid.predict(X_tempValidator)
+        score=skmtr.f1_score(y_pred=y_pred,y_true=y_validate)
+        if score>bestScore:
+            bestScore=score
+            bestFit=grid
+            bestFeaturesIndex=index
+    return bestFit,bestFeaturesIndex
+
+def testSvm(model,featuresIndex,test):
+    X_test = test.drop(columns=["label"])
+    X_test = X_test.iloc[:,featuresIndex]
+    y_test = test["label"].astype(int)
+    
+    y_pred = model.predict(X_test)
+    y_proba = model.predict_proba(X_test)[:, 1]
+    
+    print("\n--- Test Set Evaluation ---")
+    print(f"Best SVM model selected was: {model.best_params_} with {featuresIndex.sum()} features selected")
+    print("Classification Report:")
+    print(skmtr.classification_report(y_test, y_pred))
+    
+    cm = skmtr.confusion_matrix(y_test, y_pred)
+    print("Confusion Matrix:")
+    print(cm)
+    
+    auc = skmtr.roc_auc_score(y_test, y_proba)
+    print(f"Test ROC AUC: {auc:.4f}")
 
 
 ###     USING FUNCTIONS
@@ -303,11 +339,12 @@ data=maldiRename(data)
 data=createDummies(data)
 tune, test = splitData(data)
 checkImbalance(data)
-svmModel(tune)
-#logreg(data)
+svmFit,featuresIndex = svmModel(tune)
+testSvm(svmFit,featuresIndex,test)
+logreg(data)
 
 ## RANDOM FOREST
-"""
+
 best_rf = train_random_forest(tune)
 evaluate_on_test(best_rf, test)
 
@@ -321,6 +358,6 @@ feat_imp_df = pd.DataFrame({
 
 print("\nTop 10 feature importances:")
 print(feat_imp_df.head(10))
-"""
+
 
 print("--- %s seconds ---" % (time.time() - start_time))
