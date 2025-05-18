@@ -280,9 +280,6 @@ def filter(tune,k):
     print(f"Explained Variance for k = {k}:    {variances.sum()}")
     return X_filtered, y_tune, index
 
-
-
-
 def svmModel(tune):
     bestScore=-1
     train, validate = splitData(tune)
