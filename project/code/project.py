@@ -90,66 +90,6 @@ def splitData(data):
 def checkImbalance(data):
     print(f"Data is unbalanced: {data["label"].sum(axis=0)/data.shape[0]} resistant bacteria sample and {1-data["label"].sum(axis=0)/data.shape[0]} non resistant bacteria samples")
 
-def train_random_forest(tune_df, cv_splits=5, random_state=2025):
-    """
-    Tune a RandomForestClassifier on ⁠ tune_df ⁠.
-    Assumes ⁠ tune_df ⁠ has a 'label' column and all other columns are numeric features.
-    Returns the best‐found RF model.
-    """
-    # Split X / y
-    X_tune = tune_df.drop(columns=["label"])
-    y_tune = tune_df["label"].astype(int)
-    
-    # Parameter grid
-    param_grid = {
-        "n_estimators": [100, 300, 500],
-        "max_depth": [None, 10, 20],
-        "min_samples_split": [2, 5, 10],
-    }
-    
-    # RandomForest with balanced class weights
-    rf = ske.RandomForestClassifier(
-        random_state=random_state,
-        class_weight="balanced"
-    )
-    grid = skm.GridSearchCV(
-        estimator=rf,
-        param_grid=param_grid,
-        cv=cv_splits,
-        scoring="roc_auc",
-        n_jobs=-1,
-        verbose=2
-    )
-    
-    print("Starting RF GridSearchCV…")
-    grid.fit(X_tune, y_tune)
-    print(f"Best params: {grid.best_params_}")
-    print(f"Best CV ROC AUC: {grid.best_score_:.4f}")
-    
-    return grid.best_estimator_
-
-
-def evaluate_on_test(model, test_df):
-    """
-    Evaluate model on test_df.
-    Prints classification report, confusion matrix, and ROC AUC.
-    """
-    X_test = test_df.drop(columns=["label"])
-    y_test = test_df["label"].astype(int)
-    
-    y_pred = model.predict(X_test)
-    y_proba = model.predict_proba(X_test)[:, 1]
-    
-    print("\n--- Test Set Evaluation ---")
-    print("Classification Report:")
-    print(skmtr.classification_report(y_test, y_pred))
-    
-    cm = skmtr.confusion_matrix(y_test, y_pred)
-    print("Confusion Matrix:")
-    print(cm)
-    
-    auc = skmtr.roc_auc_score(y_test, y_proba)
-    print(f"Test ROC AUC: {auc:.4f}")
 
 
 ##LOGISTIC REGRESSION 
@@ -331,8 +271,70 @@ def testSvm(model,featuresIndex,test):
     auc = skmtr.roc_auc_score(y_test, y_proba)
     print(f"Test ROC AUC: {auc:.4f}")
 
+def train_random_forest(tune_df, cv_splits=5, random_state=2025):
+    """
+    Tune a RandomForestClassifier on ⁠ tune_df ⁠.
+    Assumes ⁠ tune_df ⁠ has a 'label' column and all other columns are numeric features.
+    Returns the best‐found RF model.
+    """
+    # Split X / y
+    X_tune = tune_df.drop(columns=["label"])
+    y_tune = tune_df["label"].astype(int)
+    
+    # Parameter grid
+    param_grid = {
+        "n_estimators": [100, 300, 500],
+        "max_depth": [None, 10, 20],
+        "min_samples_split": [2, 5, 10],
+    }
+    
+    # RandomForest with balanced class weights
+    rf = ske.RandomForestClassifier(
+        random_state=random_state,
+        class_weight="balanced"
+    )
+    grid = skm.GridSearchCV(
+        estimator=rf,
+        param_grid=param_grid,
+        cv=cv_splits,
+        scoring="roc_auc",
+        n_jobs=-1,
+        verbose=2
+    )
+    
+    print("Starting RF GridSearchCV…")
+    grid.fit(X_tune, y_tune)
+    print(f"Best params: {grid.best_params_}")
+    print(f"Best CV ROC AUC: {grid.best_score_:.4f}")
+    
+    return grid.best_estimator_
+
+
+def evaluate_on_test(model, test_df):
+    """
+    Evaluate model on test_df.
+    Prints classification report, confusion matrix, and ROC AUC.
+    """
+    X_test = test_df.drop(columns=["label"])
+    y_test = test_df["label"].astype(int)
+    
+    y_pred = model.predict(X_test)
+    y_proba = model.predict_proba(X_test)[:, 1]
+    
+    print("\n--- Test Set Evaluation ---")
+    print("Classification Report:")
+    print(skmtr.classification_report(y_test, y_pred))
+    
+    cm = skmtr.confusion_matrix(y_test, y_pred)
+    print("Confusion Matrix:")
+    print(cm)
+    
+    auc = skmtr.roc_auc_score(y_test, y_proba)
+    print(f"Test ROC AUC: {auc:.4f}")
+
 
 ###     USING FUNCTIONS
+
 checkna(data)
 data=drop_duplicates(data)
 data=maldiRename(data)
