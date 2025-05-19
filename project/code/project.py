@@ -14,8 +14,6 @@ import sklearn.neighbors as skn
 
 start_time = time.time()
 
-
-
 features=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_features.csv")
 labels=pd.read_csv("../DRIAMS-EC/driams_Escherichia_coli_Ceftriaxone_labels.csv")
 data=features.merge(labels)
@@ -148,7 +146,7 @@ def logreg(data):
     plt.xlabel("Vorhergesagt")
     plt.ylabel("Tatsächlich")
     plt.title("Confusion Matrix")
-    plt.savefig("../output/logreg_confusion_matrix")
+    plt.savefig("../output/logreg_confusion_matrix_log_reg")
     print(f"logistic regression plotted with {n_features}")
 
 
@@ -271,6 +269,8 @@ def testSvm(model,featuresIndex,test):
     auc = skmtr.roc_auc_score(y_test, y_proba)
     print(f"Test ROC AUC: {auc:.4f}")
 
+    ###       NAMDOEL
+
 def train_random_forest(tune_df, cv_splits=5, random_state=2025):
     """
     Tune a RandomForestClassifier on ⁠ tune_df ⁠.
@@ -283,9 +283,9 @@ def train_random_forest(tune_df, cv_splits=5, random_state=2025):
     
     # Parameter grid
     param_grid = {
-        "n_estimators": [100, 300, 500],
-        "max_depth": [None, 10, 20],
-        "min_samples_split": [2, 5, 10],
+        "n_estimators": [400],
+        "max_depth": [None],
+        "min_samples_split": [2],
     }
     
     # RandomForest with balanced class weights
@@ -304,7 +304,7 @@ def train_random_forest(tune_df, cv_splits=5, random_state=2025):
     
     print("Starting RF GridSearchCV…")
     grid.fit(X_tune, y_tune)
-    print(f"Best params: {grid.best_params_}")
+    print(f"Best Hyperparameters: {grid.best_params_}")
     print(f"Best CV ROC AUC: {grid.best_score_:.4f}")
     
     return grid.best_estimator_
@@ -331,6 +331,17 @@ def evaluate_on_test(model, test_df):
     
     auc = skmtr.roc_auc_score(y_test, y_proba)
     print(f"Test ROC AUC: {auc:.4f}")
+    return y_test, y_pred
+    
+def plotConfusionMatrix(y_test,y_pred,name):
+    cm = skmtr.confusion_matrix(y_test, y_pred)
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+    plt.xlabel("Vorhergesagt")
+    plt.ylabel("Tatsächlich")
+    plt.title("Confusion Matrix")
+    plt.savefig(f"../output/confusion_matrix_{name}")
+    print(f"Plotted")
+        ###        NAMDOEL
 
 
 ###     USING FUNCTIONS
@@ -346,10 +357,11 @@ testSvm(svmFit,featuresIndex,test)
 logreg(data)
 
 
-## RANDOM FOREST
+## RANDOM FOREST         NAMDOEL
 
 best_rf = train_random_forest(tune)
-evaluate_on_test(best_rf, test)
+RFy_test,RFy_pred = evaluate_on_test(best_rf, test)
+plotConfusionMatrix(RFy_test,RFy_pred,"Random_Forest")
 
 # Optional: feature importances
 importances = best_rf.feature_importances_
@@ -361,6 +373,8 @@ feat_imp_df = pd.DataFrame({
 
 print("\nTop 10 feature importances:")
 print(feat_imp_df.head(10))
+
+## RANDOM FOREST         NAMDOEL
 
 
 print("--- %s seconds ---" % (time.time() - start_time))
