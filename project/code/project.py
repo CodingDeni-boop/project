@@ -95,7 +95,7 @@ def logreg(data):
     X = data.drop(columns=["label"])
     y = data["label"]
 
-    n_features=100
+    n_features=10
 
     # Separation
     X_train, X_test, y_train, y_test = skm.train_test_split(X, y, test_size=0.2, random_state=42)
@@ -268,6 +268,7 @@ def testSvm(model,featuresIndex,test):
     
     auc = skmtr.roc_auc_score(y_test, y_proba)
     print(f"Test ROC AUC: {auc:.4f}")
+    return y_test,y_pred
 
     ###       NAMDOEL
 
@@ -283,9 +284,9 @@ def train_random_forest(tune_df, cv_splits=5, random_state=2025):
     
     # Parameter grid
     param_grid = {
-        "n_estimators": [400],
-        "max_depth": [None],
-        "min_samples_split": [2],
+        "n_estimators": [100, 300, 500,1000],
+        "max_depth": [None, 10, 20],
+        "min_samples_split": [2, 5, 10],
     }
     
     # RandomForest with balanced class weights
@@ -353,8 +354,9 @@ data=createDummies(data)
 tune, test = splitData(data)
 checkImbalance(data)
 svmFit,featuresIndex = svmModel(tune)
-testSvm(svmFit,featuresIndex,test)
-logreg(data)
+SVMy_test, SVMy_pred = testSvm(svmFit,featuresIndex,test)
+plotConfusionMatrix(SVMy_test,SVMy_pred,"SVM")
+#logreg(data)
 
 
 ## RANDOM FOREST         NAMDOEL
