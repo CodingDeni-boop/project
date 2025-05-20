@@ -150,6 +150,8 @@ def logreg(data):
     print(f"logistic regression plotted with {n_features}")
 
 
+
+
 ### kNN
 def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
     """
@@ -200,6 +202,50 @@ def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
 results_df, best_params = knn_with_corr_filter(data)
 print("Beste Parameter:", best_params)
 print(results_df.sort_values("mean_score", ascending=False).head(10))
+
+# ——— kNN Confusion Matrix ohne Änderung des bestehenden Codes ———
+
+# (1) Tune-/Test-Sets liegen ja schon vor:
+tune, test = splitData(data)
+
+# (2) Feature-Auswahl auf Basis der besten Schwelle
+X_tune = tune.drop(columns=["label"]).select_dtypes(include=[np.number])
+y_tune = tune["label"]
+# Korrelation erneut berechnen
+corrs = X_tune.apply(lambda col: col.corr(y_tune))
+selected_feats = corrs[corrs.abs() >= best_params["threshold"]].index.tolist()
+
+# (3) Trainings- und Test-Daten mit den ausgewählten Features
+X_train_sel = X_tune[selected_feats]
+X_test_sel  = test.drop(columns=["label"]).select_dtypes(include=[np.number])[selected_feats]
+y_test      = test["label"]
+
+# (4) kNN mit dem besten k trainieren
+k = int(best_params["k"])
+knn = skn.KNeighborsClassifier(n_neighbors=k)
+knn.fit(X_train_sel, y_tune)
+
+# (5) Vorhersage und Confusion Matrix
+y_pred = knn.predict(X_test_sel)
+cm = skmtr.confusion_matrix(y_test, y_pred)
+print("kNN Confusion Matrix (Zahlen):")
+print(cm)  
+# z.B. [[120  15]
+#       [ 22  43]]
+
+# (6) Heatmap plotten und speichern
+plt.figure(figsize=(6,6))
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+plt.xlabel("Vorhergesagt")
+plt.ylabel("Tatsächlich")
+plt.title(f"kNN Confusion Matrix (k={k}, thr={best_params['threshold']:.1f})")
+plt.savefig("../output/knn_confusion_matrix.png")
+print("Heatmap gespeichert unter ../output/knn_confusion_matrix.png")
+
+print(results_df.sort_values("mean_score", ascending=False).head(10))
+
+
+
 
 
 
