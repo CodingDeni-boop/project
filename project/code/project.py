@@ -152,11 +152,7 @@ def logreg(data):
 
 ### kNN
 def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
-    """
-    Führt kNN-Klassifikation für verschiedene Korrelationsschwellen und k-Werten durch.
-    Filtert vorab nicht-numerische Features heraus.
-    Gibt DataFrame mit allen Ergebnissen und die beste Parameter-Kombination zurück.
-    """
+    
     if thresholds is None:
         thresholds = np.arange(0.1, 1.0, 0.1)
     if k_list is None:
@@ -259,25 +255,20 @@ def testSvm(model,featuresIndex,test):
     
     print("\n--- Test Set Evaluation ---")
     print(f"Best SVM model selected was: {model.best_params_} with {featuresIndex.sum()} features selected")
-    print("Classification Report:")
-    print(skmtr.classification_report(y_test, y_pred))
-    
     cm = skmtr.confusion_matrix(y_test, y_pred)
     print("Confusion Matrix:")
     print(cm)
+
     
     auc = skmtr.roc_auc_score(y_test, y_proba)
     print(f"Test ROC AUC: {auc:.4f}")
+
     return y_test,y_pred
 
     ###       NAMDOEL
 
 def train_random_forest(tune_df, cv_splits=5, random_state=2025):
-    """
-    Tune a RandomForestClassifier on ⁠ tune_df ⁠.
-    Assumes ⁠ tune_df ⁠ has a 'label' column and all other columns are numeric features.
-    Returns the best‐found RF model.
-    """
+
     # Split X / y
     X_tune = tune_df.drop(columns=["label"])
     y_tune = tune_df["label"].astype(int)
@@ -285,7 +276,7 @@ def train_random_forest(tune_df, cv_splits=5, random_state=2025):
     # Parameter grid
     param_grid = {
         "n_estimators": [100, 300, 500,1000],
-        "max_depth": [None, 10, 20],
+        "max_depth": [None, 10, 20 ],
         "min_samples_split": [2, 5, 10],
     }
     
@@ -311,11 +302,8 @@ def train_random_forest(tune_df, cv_splits=5, random_state=2025):
     return grid.best_estimator_
 
 
-def evaluate_on_test(model, test_df):
-    """
-    Evaluate model on test_df.
-    Prints classification report, confusion matrix, and ROC AUC.
-    """
+def evaluate_on_test(model, test_df,name):
+
     X_test = test_df.drop(columns=["label"])
     y_test = test_df["label"].astype(int)
     
@@ -332,13 +320,14 @@ def evaluate_on_test(model, test_df):
     
     auc = skmtr.roc_auc_score(y_test, y_proba)
     print(f"Test ROC AUC: {auc:.4f}")
-    return y_test, y_pred
+    plotConfusionMatrix(y_test,y_pred,"SVM")
     
 def plotConfusionMatrix(y_test,y_pred,name):
     cm = skmtr.confusion_matrix(y_test, y_pred)
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
-    plt.xlabel("Vorhergesagt")
-    plt.ylabel("Tatsächlich")
+    plt.figure(figsize=(6,6))
+    sns.heatmap(cm)
+    plt.xlabel("Predicted Value")
+    plt.ylabel("Actual Value")
     plt.title("Confusion Matrix")
     plt.savefig(f"../output/confusion_matrix_{name}")
     print(f"Plotted")
@@ -354,16 +343,15 @@ data=createDummies(data)
 tune, test = splitData(data)
 checkImbalance(data)
 svmFit,featuresIndex = svmModel(tune)
-SVMy_test, SVMy_pred = testSvm(svmFit,featuresIndex,test)
-plotConfusionMatrix(SVMy_test,SVMy_pred,"SVM")
-#logreg(data)
+testSvm(svmFit,featuresIndex,test)
+logreg(data)
+evaluate_on_test(logreg,test,"Logistic_Regression")
 
 
 ## RANDOM FOREST         NAMDOEL
 
 best_rf = train_random_forest(tune)
-RFy_test,RFy_pred = evaluate_on_test(best_rf, test)
-plotConfusionMatrix(RFy_test,RFy_pred,"Random_Forest")
+evaluate_on_test(best_rf, test,"Random_Forest")
 
 # Optional: feature importances
 importances = best_rf.feature_importances_
