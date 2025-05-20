@@ -135,7 +135,7 @@ def logreg(data):
 
 
 
-
+"""
 ### kNN
 def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
     
@@ -182,7 +182,7 @@ def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
 results_df, best_params = knn_with_corr_filter(data)
 print("Beste Parameter:", best_params)
 print(results_df.sort_values("mean_score", ascending=False).head(10))
-
+"""
 ## SVM with univariate filter
 
 def filter(tune,k):
@@ -242,12 +242,12 @@ def testSvm(model,featuresIndex,test):
     cm = skmtr.confusion_matrix(y_test, y_pred)
     print("Confusion Matrix:")
     print(cm)
-    print(f"Accuracy:   {skmtr.accuracy_score(model)}")
-    print(f"Precision:   {skmtr.precision_score(model)}")
-    print(f"Recall:   {skmtr.recall_score(model)}")
-    print(f"F1:   {skmtr.f1_score(model)}")
+    print(f"Accuracy:   {skmtr.accuracy_score(y_true=y_test,y_pred=y_pred)}")
+    print(f"Precision:   {skmtr.precision_score(y_true=y_test,y_pred=y_pred)}")
+    print(f"Recall:   {skmtr.recall_score(y_true=y_test,y_pred=y_pred)}")
+    print(f"F1:   {skmtr.f1_score(y_true=y_test,y_pred=y_pred)}")
     auc = skmtr.roc_auc_score(y_test, y_proba)
-    print(f"Test ROC AUC: {auc:.4f}")
+    print(f"Test ROC AUC:   {auc}")
     plotConfusionMatrix(y_test,y_pred,"SVM")
 
     ###       NAMDOEL
@@ -297,10 +297,10 @@ def evaluate_on_test(model, test_df,name):
     cm = skmtr.confusion_matrix(y_test, y_pred)
     print("Confusion Matrix:")
     print(cm)
-    print(f"Accuracy:   {skmtr.accuracy_score(model)}")
-    print(f"Precision:   {skmtr.precision_score(model)}")
-    print(f"Recall:   {skmtr.recall_score(model)}")
-    print(f"F1:   {skmtr.f1_score(model)}")
+    print(f"Accuracy:   {skmtr.accuracy_score(y_true=y_test,y_pred=y_pred)}")
+    print(f"Precision:   {skmtr.precision_score(y_true=y_test,y_pred=y_pred)}")
+    print(f"Recall:   {skmtr.recall_score(mody_true=y_test,y_pred=y_pred)}")
+    print(f"F1:   {skmtr.f1_score(y_true=y_test,y_pred=y_pred)}")
     auc = skmtr.roc_auc_score(y_test, y_proba)
     
     print(f"Test ROC AUC: {auc:.4f}")
@@ -317,6 +317,12 @@ def plotConfusionMatrix(y_test,y_pred,name):
     plt.savefig(f"../output/confusion_matrix_{name}")
     print(f"Plotted {name}")
         ###        NAMDOEL
+
+def correlationFilter():
+    print()
+
+def knn():
+    print()
 
 
 ###     USING FUNCTIONS
