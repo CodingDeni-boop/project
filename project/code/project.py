@@ -131,23 +131,7 @@ def logreg(data):
     X_test_selected = X_test[list(sfs.feature_names_in_)]
 
     model.fit(X_train_selected, y_train)
-
-    #model classification
-    from sklearn.metrics import classification_report, confusion_matrix
-
-    y_pred = model.predict(X_test_selected)
-
-    print("Classification Report:\n", classification_report(y_test, y_pred))
-    print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
-    print("Beste C (Regularisierungsparameter):", model.C_)
-
-    cm = confusion_matrix(y_test, y_pred)
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
-    plt.xlabel("Vorhergesagt")
-    plt.ylabel("Tatsächlich")
-    plt.title("Confusion Matrix")
-    plt.savefig("../output/logreg_confusion_matrix_log_reg")
-    print(f"logistic regression plotted with {n_features}")
+    return model
 
 
 
@@ -198,52 +182,6 @@ def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
 results_df, best_params = knn_with_corr_filter(data)
 print("Beste Parameter:", best_params)
 print(results_df.sort_values("mean_score", ascending=False).head(10))
-
-# ——— kNN Confusion Matrix ohne Änderung des bestehenden Codes ———
-
-# (1) Tune-/Test-Sets liegen ja schon vor:
-tune, test = splitData(data)
-
-# (2) Feature-Auswahl auf Basis der besten Schwelle
-X_tune = tune.drop(columns=["label"]).select_dtypes(include=[np.number])
-y_tune = tune["label"]
-# Korrelation erneut berechnen
-corrs = X_tune.apply(lambda col: col.corr(y_tune))
-selected_feats = corrs[corrs.abs() >= best_params["threshold"]].index.tolist()
-
-# (3) Trainings- und Test-Daten mit den ausgewählten Features
-X_train_sel = X_tune[selected_feats]
-X_test_sel  = test.drop(columns=["label"]).select_dtypes(include=[np.number])[selected_feats]
-y_test      = test["label"]
-
-# (4) kNN mit dem besten k trainieren
-k = int(best_params["k"])
-knn = skn.KNeighborsClassifier(n_neighbors=k)
-knn.fit(X_train_sel, y_tune)
-
-# (5) Vorhersage und Confusion Matrix
-y_pred = knn.predict(X_test_sel)
-cm = skmtr.confusion_matrix(y_test, y_pred)
-print("kNN Confusion Matrix (Zahlen):")
-print(cm)  
-# z.B. [[120  15]
-#       [ 22  43]]
-
-# (6) Heatmap plotten und speichern
-plt.figure(figsize=(6,6))
-sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
-plt.xlabel("Vorhergesagt")
-plt.ylabel("Tatsächlich")
-plt.title(f"kNN Confusion Matrix (k={k}, thr={best_params['threshold']:.1f})")
-plt.savefig("../output/knn_confusion_matrix.png")
-print("Heatmap gespeichert unter ../output/knn_confusion_matrix.png")
-
-print(results_df.sort_values("mean_score", ascending=False).head(10))
-
-
-
-
-
 
 ## SVM with univariate filter
 
@@ -299,17 +237,18 @@ def testSvm(model,featuresIndex,test):
     y_pred = model.predict(X_test)
     y_proba = model.predict_proba(X_test)[:, 1]
     
-    print("\n--- Test Set Evaluation ---")
+    print("\nSVM Evaluation:")
     print(f"Best SVM model selected was: {model.best_params_} with {featuresIndex.sum()} features selected")
     cm = skmtr.confusion_matrix(y_test, y_pred)
     print("Confusion Matrix:")
     print(cm)
-
-    
+    print(f"Accuracy:   {skmtr.accuracy_score(model)}")
+    print(f"Precision:   {skmtr.precision_score(model)}")
+    print(f"Recall:   {skmtr.recall_score(model)}")
+    print(f"F1:   {skmtr.f1_score(model)}")
     auc = skmtr.roc_auc_score(y_test, y_proba)
     print(f"Test ROC AUC: {auc:.4f}")
-
-    return y_test,y_pred
+    plotConfusionMatrix(y_test,y_pred,"SVM")
 
     ###       NAMDOEL
 
@@ -349,24 +288,24 @@ def train_random_forest(tune_df, cv_splits=5, random_state=2025):
 
 
 def evaluate_on_test(model, test_df,name):
-
     X_test = test_df.drop(columns=["label"])
     y_test = test_df["label"].astype(int)
-    
     y_pred = model.predict(X_test)
     y_proba = model.predict_proba(X_test)[:, 1]
-    
-    print("\n--- Test Set Evaluation ---")
-    print("Classification Report:")
-    print(skmtr.classification_report(y_test, y_pred))
-    
+
+    print("\n{name} Evaluation:")
     cm = skmtr.confusion_matrix(y_test, y_pred)
     print("Confusion Matrix:")
     print(cm)
-    
+    print(f"Accuracy:   {skmtr.accuracy_score(model)}")
+    print(f"Precision:   {skmtr.precision_score(model)}")
+    print(f"Recall:   {skmtr.recall_score(model)}")
+    print(f"F1:   {skmtr.f1_score(model)}")
     auc = skmtr.roc_auc_score(y_test, y_proba)
+    
     print(f"Test ROC AUC: {auc:.4f}")
-    plotConfusionMatrix(y_test,y_pred,"SVM")
+
+    plotConfusionMatrix(y_test,y_pred,name)
     
 def plotConfusionMatrix(y_test,y_pred,name):
     cm = skmtr.confusion_matrix(y_test, y_pred)
@@ -376,7 +315,7 @@ def plotConfusionMatrix(y_test,y_pred,name):
     plt.ylabel("Actual Value")
     plt.title("Confusion Matrix")
     plt.savefig(f"../output/confusion_matrix_{name}")
-    print(f"Plotted")
+    print(f"Plotted {name}")
         ###        NAMDOEL
 
 
@@ -390,8 +329,8 @@ tune, test = splitData(data)
 checkImbalance(data)
 svmFit,featuresIndex = svmModel(tune)
 testSvm(svmFit,featuresIndex,test)
-logreg(data)
-evaluate_on_test(logreg,test,"Logistic_Regression")
+LogRegModel=logreg(data)
+evaluate_on_test(LogRegModel,test,"Logistic_Regression")
 
 
 ## RANDOM FOREST         NAMDOEL
