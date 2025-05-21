@@ -284,14 +284,30 @@ def correlationFilter(tune,threshold):
                 toRemove.append(X.columns[y])
     toRemove=pd.Series(toRemove)
     toRemove.drop_duplicates(inplace=True)
-    print(toRemove)
     filtered_X=X.drop(columns=toRemove)
-    print(filtered_X)
-    return filtered_X,y
+    return filtered_X,y_var
 
 
-def knn():
-    print()
+def knn(X,y):
+    model=skn.KNeighborsClassifier()
+    hyperparameters={
+
+        "n_neighbors" : [5,10,50,150,300],
+        "algorithm"   : ["auto", "ball_tree", "kd_tree", "brute"]
+
+    }
+
+    grid = skm.GridSearchCV(
+        estimator=model,
+        param_grid=hyperparameters,
+        scoring="f1",     
+        cv=5,                 
+        verbose=2,
+        n_jobs=-1             
+
+    )      
+    grid.fit(y=y,X=X)
+    return grid
 
 
 ###     USING FUNCTIONS
@@ -302,8 +318,10 @@ data=maldiRename(data)
 data=createDummies(data)
 tune, test = splitData(data)
 checkImbalance(data)
-correlationFilter(tune,0.8)
-
+knn_X,knn_y = correlationFilter(tune,0.8)
+knnFit = knn(knn_X,knn_y)
+test_knn=test.loc[:,list(knn_X.columns[:]) +["label"]]
+evaluate_on_test(model=knnFit,test_df=test_knn,name="KNN")
 
 """
 svmFit,featuresIndex = svmModel(tune)
