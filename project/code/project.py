@@ -307,6 +307,7 @@ def knn(X,y):
 
     )      
     grid.fit(y=y,X=X)
+    print(f"Best hyperparameters selected: {grid.best_params_}")
     return grid
 
 
