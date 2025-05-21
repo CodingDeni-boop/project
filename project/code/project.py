@@ -214,7 +214,7 @@ def train_random_forest(tune_df, cv_splits=5, random_state=2025):
     
     # Parameter grid
     param_grid = {
-        "n_estimators": [100, 300, 500,1000],
+        "n_estimators": [300, 350, 400, 450, 500],
         "max_depth": [None, 10, 20 ],
         "min_samples_split": [2, 5, 10],
     }
