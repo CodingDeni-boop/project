@@ -108,7 +108,8 @@ def logreg(data):
             n_features_to_select=n_features,  ##(n_features = 10 is runnable, 100 is insanely slow, ideal would be 500?) RUNNING OVERNIGHT WITH 100
             direction="forward",
             scoring='accuracy',
-            cv=5)
+            cv=5,
+            n_jobs=-1)
 
     sfs.fit(X_train, y_train)
     print('Ausgewählte Merkmale:', sfs.feature_names_in_)
@@ -123,7 +124,8 @@ def logreg(data):
         penalty='l1',  # oder 'l2'
         solver='liblinear',  # für L1
         scoring='accuracy',
-        max_iter=1000
+        max_iter=1000,
+        n_jobs=-1
     )
 
     # training just with the featured selection
@@ -133,56 +135,6 @@ def logreg(data):
     model.fit(X_train_selected, y_train)
     return model
 
-
-
-"""
-### kNN
-def knn_with_corr_filter(data, thresholds=None, k_list=None, cv=5):
-    
-    if thresholds is None:
-        thresholds = np.arange(0.1, 1.0, 0.1)
-    if k_list is None:
-        k_list = list(range(1, 21, 2))
-
-    # Merkmale und Label trennen
-    X = data.drop("label", axis=1)
-    y = data["label"]
-
-    # Nur numerische Features für Korrelationsanalyse
-    X_numeric = X.select_dtypes(include=[np.number])
-    dropped = X.shape[1] - X_numeric.shape[1]
-    if dropped > 0:
-        print(f"Hinweis: {dropped} nicht-numerische Features wurden vor der Korrelation entfernt.")
-
-    # Korrelation der numerischen Features mit dem Label berechnen
-    correlations = X_numeric.apply(lambda col: col.corr(y))
-    results = []
-
-    for thresh in thresholds:
-        # Features mit absoluter Korrelation >= Schwelle auswählen
-        selected = correlations[correlations.abs() >= thresh].index.tolist()
-        if not selected:
-            continue
-        X_sel = X_numeric[selected]
-        for k in k_list:
-            knn = skn.KNeighborsClassifier(n_neighbors=k)
-            scores = skm.cross_val_score(knn, X_sel, y, cv=cv)
-            results.append({"threshold": thresh, "k": k, "mean_score": scores.mean()})
-
-    # Ergebnisse zusammenfassen
-    results_df = pd.DataFrame(results)
-    if results_df.empty:
-        raise ValueError("Keine Kombination von Features und Parametern gefunden. Schwellenwerte oder Daten prüfen.")
-
-    # Beste Parameter-Kombination ermitteln
-    best = results_df.loc[results_df["mean_score"].idxmax()]
-    return results_df, best
-
-# Beispielaufruf der neuen Funktion
-results_df, best_params = knn_with_corr_filter(data)
-print("Beste Parameter:", best_params)
-print(results_df.sort_values("mean_score", ascending=False).head(10))
-"""
 ## SVM with univariate filter
 
 def filter(tune,k):
@@ -215,9 +167,11 @@ def svmModel(tune):
         grid = skm.GridSearchCV(
             estimator=model,
             param_grid=hyperparameters,
-            scoring="f1",     # Metric for evaluation
-            cv=5,                   # 5-fold cross-validation
-            verbose=2               # Display the process
+            scoring="f1",     
+            cv=5,                 
+            verbose=2,
+            n_jobs=-1             
+
         )      
         grid.fit(y=y,X=X)
         X_tempValidator=X_validate.iloc[:,index]
@@ -293,13 +247,13 @@ def evaluate_on_test(model, test_df,name):
     y_pred = model.predict(X_test)
     y_proba = model.predict_proba(X_test)[:, 1]
 
-    print("\n{name} Evaluation:")
+    print(f"\n{name} Evaluation:")
     cm = skmtr.confusion_matrix(y_test, y_pred)
     print("Confusion Matrix:")
     print(cm)
     print(f"Accuracy:   {skmtr.accuracy_score(y_true=y_test,y_pred=y_pred)}")
     print(f"Precision:   {skmtr.precision_score(y_true=y_test,y_pred=y_pred)}")
-    print(f"Recall:   {skmtr.recall_score(mody_true=y_test,y_pred=y_pred)}")
+    print(f"Recall:   {skmtr.recall_score(y_true=y_test,y_pred=y_pred)}")
     print(f"F1:   {skmtr.f1_score(y_true=y_test,y_pred=y_pred)}")
     auc = skmtr.roc_auc_score(y_test, y_proba)
     
@@ -310,7 +264,7 @@ def evaluate_on_test(model, test_df,name):
 def plotConfusionMatrix(y_test,y_pred,name):
     cm = skmtr.confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(6,6))
-    sns.heatmap(cm)
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
     plt.xlabel("Predicted Value")
     plt.ylabel("Actual Value")
     plt.title("Confusion Matrix")
@@ -318,8 +272,23 @@ def plotConfusionMatrix(y_test,y_pred,name):
     print(f"Plotted {name}")
         ###        NAMDOEL
 
-def correlationFilter():
-    print()
+def correlationFilter(tune,threshold):
+    X=tune.drop(columns="label")
+    y_var=tune.loc[:,"label"]
+    toRemove=[]
+    CorrelationMatrix=X.corr().abs()
+    print("Correlation Matrix Done")
+    for y in range(0,6000):
+        for x in range(y+1,6000):
+            if y!=x and CorrelationMatrix.iloc[y,x]>=threshold:
+                toRemove.append(X.columns[y])
+    toRemove=pd.Series(toRemove)
+    toRemove.drop_duplicates(inplace=True)
+    print(toRemove)
+    filtered_X=X.drop(columns=toRemove)
+    print(filtered_X)
+    return filtered_X,y
+
 
 def knn():
     print()
@@ -333,6 +302,10 @@ data=maldiRename(data)
 data=createDummies(data)
 tune, test = splitData(data)
 checkImbalance(data)
+correlationFilter(tune,0.8)
+
+
+"""
 svmFit,featuresIndex = svmModel(tune)
 testSvm(svmFit,featuresIndex,test)
 LogRegModel=logreg(data)
@@ -357,5 +330,5 @@ print(feat_imp_df.head(10))
 
 ## RANDOM FOREST         NAMDOEL
 
-
+"""
 print("--- %s seconds ---" % (time.time() - start_time))
