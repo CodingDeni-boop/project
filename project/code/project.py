@@ -32,25 +32,6 @@ def checkna(data):
     datana=data.isna()
     print(f"dataset has {np.sum(np.sum(datana,axis=1))} NA")
 
-## I DONT LIKE NAMES 0798f178-95d5-4e92-ad63-831cf50605b5_MALDI2, I WANT MALDI2, THAT'S IT, THEIR NAME WILL BE THEIR INDEX. ACTUALLY, M1=0, M2=1
-def maldiRename(data):
-    data = data.rename(columns={"Unnamed: 0" : "type"})
-    M1 = np.sum(data.loc[:,"type"].str.contains("MALDI1"))
-    M2 = np.sum(data.loc[:,"type"].str.contains("MALDI2"))
-    data.loc[data.loc[:,"type"].str.contains("MALDI1"), "type"] = "M1"
-    data.loc[data.loc[:,"type"].str.contains("MALDI2"), "type"] = "M2"
-    print(f"There are: M1 {M1}, M2 {M2}")
-    return data
-
-def createDummies(data):
-    dummies=pd.get_dummies(data["type"],drop_first=True)
-    dummies.reset_index(inplace=True)
-    data.reset_index(inplace=True)
-    data=data.merge(dummies,on="index",how="left")
-    data=data.drop(["type","index"],axis=1)
-    data["M2"]=data["M2"].astype(float)
-    return data
-
 ###CHECK FOR DOUBLES
 def drop_duplicates(data):
     if data.equals(data.drop_duplicates()):
@@ -294,8 +275,7 @@ def knn(X,y):
 
 checkna(data)
 data=drop_duplicates(data)
-data=maldiRename(data)
-data=createDummies(data)
+data.drop(columns="Unnamed: 0",inplace=True)
 tune, test = splitData(data,0.15)
 checkImbalance(data)
 
