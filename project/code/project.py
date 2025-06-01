@@ -279,7 +279,7 @@ def knn(X,y):
     grid = skm.GridSearchCV(
         estimator=model,
         param_grid=hyperparameters,
-        scoring="f1",     
+        scoring="roc_auc",     
         cv=5,                 
         verbose=2,
         n_jobs=-1             
