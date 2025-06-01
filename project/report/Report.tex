@@ -38,8 +38,25 @@
 
 \begin{huge}
 \begin{center}
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
 Escherichia Coli Ceftriaxone Resistance
 \break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+
 \end{center}
 \end{huge}
 
@@ -58,18 +75,85 @@ Antibiotic resistance in bacteria is a critical issue in modern medicine. A stud
 
 \begin{normalsize}\color {bluino}
 \hfill\break
-
 \noindent Data Preprocessing and Visualization:\\
 ---------------------------------------------------------------------------------------------------------------------------------------------
 \end{normalsize}
 
 \begin{normalsize}
 
+The dataset consists of an integer label, either 1 or 0, indicating resistance to the antibiotic; mass spectrometry results, which are floats ranging from 0 to 1, which have been most likely normalized; and a column named "Unnamed : 0" which has elements of type string. This column contained a serial number ending with either “MALDI\_1” or “MALDI\_2”, suggesting it might relate to the machines used for the observations. To prevent overfitting, we decided to remove this column. Additionally, we checked the dataset for NA and duplicates but found none. 
+The reformatted dataset now consists in 5999 features and one label spanning over 1386 samples. As the dataset contains more features than samples, a feature selection must be performed before fitting with either a filter, wrapper or embedded method. To ensure that some features can be removed without losing too much information, we created a Pearson's correlation matrix of the features and plotted its heat map.
 
+\centering
+\includegraphics[width=0.8\textwidth]{heatmap.png}
+
+
+qei0gfnoiqnegfqefqgionwhrb0ioegqiapnbehtpogjrfirwnioaegbg wrg0jaev09bsonveiajpvads e90ajgf0'kAEVPOIMSJBPRGAEFKwopeavdsfbkpm
 
 \end{normalsize}
 
 \begin{normalsize}\color {bluino}
+\hfill\break
+\noindent SVM:\\
+---------------------------------------------------------------------------------------------------------------------------------------------
+\end{normalsize}
+
+\begin{normalsize}
+
+aafef
+
+\end{normalsize}
+
+\begin{normalsize}\color {bluino}
+\hfill\break
+\noindent Random Forest:\\
+---------------------------------------------------------------------------------------------------------------------------------------------
+\end{normalsize}
+
+\begin{normalsize}
+
+aafef
+
+\end{normalsize}
+
+\begin{normalsize}\color {bluino}
+\hfill\break
+\noindent Logistic Regression:\\
+---------------------------------------------------------------------------------------------------------------------------------------------
+\end{normalsize}
+
+\begin{normalsize}
+
+aafef
+
+\end{normalsize}
+
+\begin{normalsize}\color {bluino}
+\hfill\break
+\noindent KNN:\\
+---------------------------------------------------------------------------------------------------------------------------------------------
+\end{normalsize}
+
+\begin{normalsize}
+
+aafef
+
+\end{normalsize}
+
+\begin{normalsize}\color {bluino}
+\hfill\break
+\noindent Results:\\
+---------------------------------------------------------------------------------------------------------------------------------------------
+\end{normalsize}
+
+\begin{normalsize}
+
+aafef
+
+\end{normalsize}
+
+\begin{normalsize}\color {bluino}
+\hfill\break
 \noindent References\\
 ---------------------------------------------------------------------------------------------------------------------------------------------
 \end{normalsize}

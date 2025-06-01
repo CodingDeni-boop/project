@@ -45,8 +45,15 @@ def drop_duplicates(data):
 def heatmapPlotter(data):
     corr=data.corr()
     plt.figure(figsize=(300,300))
-    sns.heatmap(corr)
+    hm = sns.heatmap(corr,xticklabels=250, yticklabels=250)
+    hm.collections[0].colorbar.ax.tick_params(labelsize=250)
+    hm.tick_params(axis='x', length=100, width=20)
+    hm.tick_params(axis='y', length=100, width=20)
+    plt.xticks(fontsize=200)
+    plt.yticks(fontsize=200)
+    plt.title("Pearson's Correlation Heatmap", fontsize=750, pad=500)
     plt.savefig("../output/heatmap")
+
     print("plotted")
 
 def splitData(data, test_size):
@@ -278,6 +285,10 @@ data=drop_duplicates(data)
 data.drop(columns="Unnamed: 0",inplace=True)
 tune, test = splitData(data,0.15)
 checkImbalance(data)
+
+heatmapPlotter(data=data.drop(columns="label"))
+
+
 
 knn_X,knn_y = correlationFilter(tune,0.8)
 knnFit = knn(knn_X,knn_y)
