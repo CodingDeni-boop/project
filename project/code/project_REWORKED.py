@@ -11,7 +11,6 @@ import sklearn.ensemble as ske
 import sklearn.metrics as skmtr
 import sklearn.svm as svm
 import sklearn.neighbors as skn
-import sklearn.pipeline as skp
 
 start_time = time.time()
 
@@ -51,6 +50,14 @@ def createDummies(data):
     data["M2"]=data["M2"].astype(float)
     return data
 
+##  MAYBE TYPE EXPLAINS THE LABEL SOME WAY, actually no... maybe M2 has slightly more probability of label 1, but not much is seen.
+##  PLOT M1 - M2 vs label
+
+def m1_m2_plotter(data):
+    fig = plt.figure(figsize=(6,6)) 
+    sns.countplot(data=data,x="label",hue="type")
+    plt.savefig("../output/M1-M2 vs label")
+
 ###CHECK FOR DOUBLES
 def drop_duplicates(data):
     if data.equals(data.drop_duplicates()):
@@ -68,8 +75,8 @@ def heatmapPlotter(data):
     plt.savefig("../output/heatmap")
     print("plotted")
 
-def splitData(data, test_size):
-    tune, test = skm.train_test_split(data, test_size=test_size)
+def splitData(data):
+    tune, test = skm.train_test_split(data, test_size=0.15)
     tune.reset_index(inplace=True)
     tune.drop(axis=1, inplace=True,columns="index")
     test.reset_index(inplace=True)
@@ -130,37 +137,51 @@ def logreg(data):
 
 ## SVM with univariate filter
 
+def filter(tune,k):
+    y_tune=tune["label"]
+    X_tune=tune.drop(columns="label")
+    filter=fs.SelectKBest(k=k)
+    filter.fit_transform(X_tune,y_tune)
+    index=filter.get_support()
+    X_filtered=X_tune.iloc[:,index]
+    p_val=filter.pvalues_[index]
+    variances=filter.scores_[index]/filter.scores_.sum()
+    print(f"Highest P value for k = {k}:    {p_val.max()}")
+    print(f"Explained Variance for k = {k}:    {variances.sum()}")
+    return X_filtered, y_tune, index
 
 def svmModel(tune):
+    bestScore=-1
+    train, validate = splitData(tune)
+    y_validate=validate.loc[:,"label"]
+    X_validate=validate.drop(columns="label")
+    fits=[]
+    for k in [750,1000,1250,1500,1750]:
+        X,y,index = filter(train,k=k)
+        model=svm.SVC(class_weight="balanced",probability=True)
+        hyperparameters={
 
-    y=tune.loc[:,"label"]
-    X=tune.drop(columns="label")
+            "C" : [10,100,125,150,175],
+            "kernel" : ['linear', 'poly', 'rbf', 'sigmoid']
+        }
+        grid = skm.GridSearchCV(
+            estimator=model,
+            param_grid=hyperparameters,
+            scoring="f1",     
+            cv=5,                 
+            verbose=2,
+            n_jobs=-1             
 
-    pipe = skp.Pipeline([
-        ("filter", fs.SelectKBest()),
-        ("SVM", svm.SVC(class_weight="balanced", probability=True))
-    ])
-
-    hyperparameters={
-        "filter__k" : [500, 1000, 1250, 1500, 1750],
-        "SVM__C" : [10,100,125,150,175],
-        "SVM__kernel" : ['linear', 'poly', 'rbf', 'sigmoid']
-    }
-    grid = skm.GridSearchCV(
-        estimator=pipe,
-        param_grid=hyperparameters,
-        scoring="f1",     
-        cv=5,                 
-        verbose=2,
-        n_jobs=-1             
-
-    )      
-    grid.fit(y=y,X=X)
-    bestFit = grid.best_estimator_
-    bestHyperparameters = grid.best_params_
-    print(f"The best hyperparameters selected were:   {bestHyperparameters}")
-
-    return bestFit
+        )      
+        grid.fit(y=y,X=X)
+        X_tempValidator=X_validate.iloc[:,index]
+        y_pred=grid.predict(X_tempValidator)
+        score=skmtr.f1_score(y_pred=y_pred,y_true=y_validate)
+        if score>bestScore:
+            bestScore=score
+            bestFit=grid
+            bestFeaturesIndex=index
+    return bestFit,bestFeaturesIndex
 
 def testSvm(model,featuresIndex,test):
     X_test = test.drop(columns=["label"])
@@ -296,21 +317,19 @@ checkna(data)
 data=drop_duplicates(data)
 data=maldiRename(data)
 data=createDummies(data)
-tune, test = splitData(data,0.15)
+tune, test = splitData(data)
 checkImbalance(data)
-
 knn_X,knn_y = correlationFilter(tune,0.8)
 knnFit = knn(knn_X,knn_y)
 test_knn=test.loc[:,list(knn_X.columns[:]) +["label"]]
 evaluate_on_test(model=knnFit,test_df=test_knn,name="KNN")
 
-
-svmFit = svmModel(tune)
-evaluate_on_test(svmFit,test,"SVM")
-
-
+"""
+svmFit,featuresIndex = svmModel(tune)
+testSvm(svmFit,featuresIndex,test)
 LogRegModel=logreg(data)
 evaluate_on_test(LogRegModel,test,"Logistic_Regression")
+
 
 ## RANDOM FOREST         NAMDOEL
 
@@ -330,5 +349,5 @@ print(feat_imp_df.head(10))
 
 ## RANDOM FOREST         NAMDOEL
 
-
+"""
 print("--- %s seconds ---" % (time.time() - start_time))
