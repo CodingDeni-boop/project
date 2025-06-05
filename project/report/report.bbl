@@ -1,0 +1,77 @@
+\begin{thebibliography}{7}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Harris et~al.(2020)Harris, Millman, van~der Walt, Gommers, Virtanen,
+  Cournapeau, Wieser, Taylor, Berg, Smith, Kern, Picus, Hoyer, van Kerkwijk,
+  Brett, Haldane, del R{\'{i}}o, Wiebe, Peterson, G{\'{e}}rard-Marchant,
+  Sheppard, Reddy, Weckesser, Abbasi, Gohlke, and Oliphant]{numpy}
+Charles~R. Harris, K.~Jarrod Millman, St{\'{e}}fan~J. van~der Walt, Ralf
+  Gommers, Pauli Virtanen, David Cournapeau, Eric Wieser, Julian Taylor,
+  Sebastian Berg, Nathaniel~J. Smith, Robert Kern, Matti Picus, Stephan Hoyer,
+  Marten~H. van Kerkwijk, Matthew Brett, Allan Haldane, Jaime~Fern{\'{a}}ndez
+  del R{\'{i}}o, Mark Wiebe, Pearu Peterson, Pierre G{\'{e}}rard-Marchant,
+  Kevin Sheppard, Tyler Reddy, Warren Weckesser, Hameer Abbasi, Christoph
+  Gohlke, and Travis~E. Oliphant.
+\newblock Array programming with {NumPy}.
+\newblock \emph{Nature}, 585\penalty0 (7825):\penalty0 357--362, September
+  2020.
+\newblock \doi{10.1038/s41586-020-2649-2}.
+\newblock URL \url{https://doi.org/10.1038/s41586-020-2649-2}.
+
+\bibitem[Hunter(2007)]{matplotlib}
+J.~D. Hunter.
+\newblock Matplotlib: A 2d graphics environment.
+\newblock \emph{Computing in Science \& Engineering}, 9\penalty0 (3):\penalty0
+  90--95, 2007.
+\newblock \doi{10.1109/MCSE.2007.55}.
+
+\bibitem[Mihankhah et~al.(2017)Mihankhah, Khoshbakht, Raeisi, and
+  Raeisi]{IranBacteria}
+Abbas Mihankhah, Rahem Khoshbakht, Mojtaba Raeisi, and Vahideh Raeisi.
+\newblock Prevalence and antibiotic resistance pattern of bacteria isolated
+  from urinary tract infections in northern iran.
+\newblock \emph{J Res Med Sci}, 22:\penalty0 108, 2017.
+\newblock ISSN 1735-1995 (Print); 1735-7136 (Electronic); 1735-1995 (Linking).
+\newblock \doi{10.4103/jrms.JRMS{\_}889{\_}16}.
+
+\bibitem[pandas~development team(2020)]{pandas}
+The pandas~development team.
+\newblock pandas-dev/pandas: Pandas.
+\newblock February 2020.
+\newblock \doi{10.5281/zenodo.3509134}.
+\newblock URL \url{https://doi.org/10.5281/zenodo.3509134}.
+
+\bibitem[Pedregosa et~al.(2011)Pedregosa, Varoquaux, Gramfort, Michel, Thirion,
+  Grisel, Blondel, Prettenhofer, Weiss, Dubourg, Vanderplas, Passos,
+  Cournapeau, Brucher, Perrot, and Duchesnay]{scikit-learn}
+F.~Pedregosa, G.~Varoquaux, A.~Gramfort, V.~Michel, B.~Thirion, O.~Grisel,
+  M.~Blondel, P.~Prettenhofer, R.~Weiss, V.~Dubourg, J.~Vanderplas, A.~Passos,
+  D.~Cournapeau, M.~Brucher, M.~Perrot, and E.~Duchesnay.
+\newblock Scikit-learn: Machine learning in {P}ython.
+\newblock \emph{Journal of Machine Learning Research}, 12:\penalty0 2825--2830,
+  2011.
+
+\bibitem[Waskom(2021)]{seaborn}
+Michael~L. Waskom.
+\newblock seaborn: statistical data visualization.
+\newblock \emph{Journal of Open Source Software}, 6\penalty0 (60):\penalty0
+  3021, 2021.
+\newblock \doi{10.21105/joss.03021}.
+\newblock URL \url{https://doi.org/10.21105/joss.03021}.
+
+\bibitem[Weis et~al.(2022)Weis, Cu{\'e}nod, Rieck, Dubuis, Graf, Lang, Oberle,
+  Brackmann, S{\o}gaard, Osthoff, Borgwardt, and Egli]{datasetExplaination}
+Caroline Weis, Aline Cu{\'e}nod, Bastian Rieck, Olivier Dubuis, Susanne Graf,
+  Claudia Lang, Michael Oberle, Maximilian Brackmann, Kirstine~K. S{\o}gaard,
+  Michael Osthoff, Karsten Borgwardt, and Adrian Egli.
+\newblock Direct antimicrobial resistance prediction from clinical maldi-tof
+  mass spectra using machine learning.
+\newblock \emph{Nature Medicine}, 28\penalty0 (1):\penalty0 164--174, 2022.
+\newblock \doi{10.1038/s41591-021-01619-9}.
+\newblock URL \url{https://doi.org/10.1038/s41591-021-01619-9}.
+
+\end{thebibliography}

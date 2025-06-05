@@ -132,7 +132,7 @@ def svmModel(tune):
     hyperparameters={
         "filter__k" : [500, 1000, 1250, 1500, 1750],
         "SVM__C" : [10,100,125,150,175],
-        "SVM__kernel" : ['linear', 'poly', 'rbf', 'sigmoid']
+        "SVM__kernel" : ["linear", "poly", "rbf", "sigmoid"]
     }
     grid = skm.GridSearchCV(
         estimator=pipe,
@@ -150,26 +150,7 @@ def svmModel(tune):
 
     return bestFit
 
-def testSvm(model,featuresIndex,test):
-    X_test = test.drop(columns=["label"])
-    X_test = X_test.iloc[:,featuresIndex]
-    y_test = test["label"].astype(int)
-    
-    y_pred = model.predict(X_test)
-    y_proba = model.predict_proba(X_test)[:, 1]
-    
-    print("\nSVM Evaluation:")
-    print(f"Best SVM model selected was: {model.best_params_} with {featuresIndex.sum()} features selected")
-    cm = skmtr.confusion_matrix(y_test, y_pred)
-    print("Confusion Matrix:")
-    print(cm)
-    print(f"Accuracy:   {skmtr.accuracy_score(y_true=y_test,y_pred=y_pred)}")
-    print(f"Precision:   {skmtr.precision_score(y_true=y_test,y_pred=y_pred)}")
-    print(f"Recall:   {skmtr.recall_score(y_true=y_test,y_pred=y_pred)}")
-    print(f"F1:   {skmtr.f1_score(y_true=y_test,y_pred=y_pred)}")
-    auc = skmtr.roc_auc_score(y_test, y_proba)
-    print(f"Test ROC AUC:   {auc}")
-    plotConfusionMatrix(y_test,y_pred,"SVM")
+
 
     ###       NAMDOEL
 
@@ -214,17 +195,24 @@ def evaluate_on_test(model, test_df,name):
     y_pred = model.predict(X_test)
     y_proba = model.predict_proba(X_test)[:, 1]
 
+
     print(f"\n{name} Evaluation:")
     cm = skmtr.confusion_matrix(y_test, y_pred)
     print("Confusion Matrix:")
+
+    accuracy = skmtr.accuracy_score(y_true=y_test,y_pred=y_pred)
+    precision = skmtr.precision_score(y_true=y_test,y_pred=y_pred)
+    recall = skmtr.recall_score(y_true=y_test,y_pred=y_pred)
+    f1 = skmtr.f1_score(y_true=y_test,y_pred=y_pred)
+    RocAuc = skmtr.roc_auc_score(y_test, y_proba)
+
     print(cm)
-    print(f"Accuracy:   {skmtr.accuracy_score(y_true=y_test,y_pred=y_pred)}")
-    print(f"Precision:   {skmtr.precision_score(y_true=y_test,y_pred=y_pred)}")
-    print(f"Recall:   {skmtr.recall_score(y_true=y_test,y_pred=y_pred)}")
-    print(f"F1:   {skmtr.f1_score(y_true=y_test,y_pred=y_pred)}")
-    auc = skmtr.roc_auc_score(y_test, y_proba)
-    
-    print(f"Test ROC AUC: {auc:.4f}")
+    print(f"Accuracy:   {accuracy}")
+    print(f"Precision:   {precision}")
+    print(f"Recall:   {recall}")
+    print(f"F1:   {f1}")
+    print(f"Test ROC AUC: {RocAuc}")
+
 
     plotConfusionMatrix(y_test,y_pred,name)
     
@@ -286,7 +274,9 @@ data.drop(columns="Unnamed: 0",inplace=True)
 tune, test = splitData(data,0.15)
 checkImbalance(data)
 
-heatmapPlotter(data=data.drop(columns="label"))
+#heatmapPlotter(data=data.drop(columns="label"))
+
+tables = pd.DataFrame()
 
 
 

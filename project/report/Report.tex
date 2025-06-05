@@ -1,176 +1,201 @@
-\documentclass[100pt]{article}
-\usepackage[italian,american]{babel}
-\usepackage[utf8]{inputenc}
-\usepackage{fancyhdr}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage{minted}
-\usepackage[a4paper, left=0.911in, right=0.911in]{geometry}
-\usepackage{hyperref}
-\usepackage{calc}
-\usepackage{listings}
-\usepackage{wrapfig}
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2024
+
+
+% ready for submission
+\usepackage{neurips_2024}
+\usepackage{natbib}
+
 \usepackage{graphicx}
-\usepackage{xcolor}
-\definecolor{keywords}{RGB}{255,0,90}
-\definecolor{comments}{RGB}{0,0,113}
-\definecolor{red}{RGB}{160,0,0}
-\definecolor{green}{RGB}{0,150,0}
-\definecolor{bluino}{RGB}{4, 55, 242}
-\definecolor{carota}{rgb}{0.93, 0.57, 0.13}
-\definecolor{black}{rgb}{0.0, 0.0, 0.0}
-\definecolor{rosino}{rgb}{0.87, 0.36, 0.51}
-\definecolor{cadetblue}{rgb}{0.1, 0.1, 0.70}
-\pagenumbering{arabic}
-\pagestyle{plain}
-\usepackage{setspace}
-\usepackage{enumitem}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+
+
+\title{Escherichia Coli Ceftriaxone Resistance}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+\author{%
+  D. Bugatti, N. Dupertuis, A. Giacomuzzi, N. Oberholzer\\
+  Foundations of Data Science\\
+  Department of Health Science and Technology\\
+  ETH Zürich\\
+}
+
+
 
 \begin{document}
+\maketitle
+
+\begin{abstract}
+STILL NEED TO WORK ON THIS:
+\end{abstract}
 
 
-\setlength{\headsep}{35pt}
-\fancyhf{}
-\fancyhead[R]{\color{bluino} \small Daniele Bugatti, Nicole Dupertuis, \\ Amanda Giacomuzzi, Namdoel Oberholzer}
-\fancyhead[L]{\color{bluino} \small D-HEST \\ Foundations of Data Science}
+\section{Overview and Preprocessing}
 
-\renewcommand\headrulewidth{0pt}
-\pagestyle{fancy}
+\subsection{Introduction to the Dataset}
 
-\begin{huge}
-\begin{center}
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
-Escherichia Coli Ceftriaxone Resistance
-\break
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
-\hfill\break
+Antibiotic resistance in bacteria is a critical issue in modern medicine. A study conducted by \citet{IranBacteria} revealed that an astonishing 87.5\% of the bacteria sampled in North Iran were resistant to at least
+one antibiotic. It is evident that this percentage has likely increased until now, underscoring the urgency
+of addressing this topic. Another study published in 2022 successfully compiled a dataset containing mass
+spectrometer results from more than 300’000 samples of bacteria and fungi. This dataset was then used to
+train a machine learning model capable of predicting whether a bacteria is resistant to a specific type of
+antibiotic; with the ultimate goal of prescribing the most effective treatment to a patient \citep{datasetExplaination}. In this
+project, we only selected the samples used to train for the resistance to Ceftriaxone of Escherichia Coli,
+with the aim of building and testing different models onto real-world scenarios.
 
-\end{center}
-\end{huge}
+\subsection{Data Wrangling and Visualization}
+
+The dataset consists of an integer label, either 1 or 0, indicating resistance to the antibiotic; mass
+spectrometry results, which are floats ranging from 0 to 1, which have been most likely normalized; and a
+column named ”Unnamed : 0” which has elements of type string. This column contained a serial number
+ending with either “MALDI\_1” or “MALDI\_2”, suggesting it might relate to the machines used for the
+observations. To prevent overfitting, we decided to remove this column. Additionally, we checked the
+dataset for NA and duplicates but found none. The reformatted dataset now consists in 5999 features
+and one label spanning over 1386 samples. 
+
+\subsubsection{Avoiding the Curse of Dimensionality}
+
+As the dataset contains more features than samples, a feature
+selection must be performed before fitting with either a filter, wrapper or embedded method. To ensure
+that some features can be removed without losing too much information, we created a Pearson’s correlation
+matrix of the features and plotted its heatmap with matplotlib \citep{matplotlib} and seaborn \citep{seaborn}.\\
+
+\newpage
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\textwidth]{heatmap.png}
+	 \vspace{-3em}
+	\caption{Heatmap of Pearson's correlation matrix}
+\end{figure}
+
+Except the trivial white line that divides the heatmap in half, there are numerous white and dark blue spots, which indicate high positive or negative correlation. Thanks to the graph we can safely assume that most of the variable are correlated, and therefore a filter will not only diminish the probability of overfitting (as mentioned earlier, a higher number of features than samples must always be avoided), but also focus the attention of the model onto non-collinear and highly explanatory features. 
+
+\subsubsection{Assessing Class Imbalance}
+
+Another issue that must be addressed is the class imbalance; 81.5\% of the bacteria samples are resistant to Ceftriaxone, and only 18.5\% are not. There are several ways to help the model focus more onto the minority class. One solution is undersampling the majority class, but we ruled this out, because our dataset already has a relatively low number of samples. Another solution is oversampling the minority, but we rejected it because the duplicated samples would have identical values, therefore increasing the chance of overfitting which is already a concern with this dataset. The solution we chose as best is balancing the class weight in the model. This method doesn't involve dataset alterations, it instead adjusts the training process by giving more importance to mistakes made on the minority class. Specifically, by multiplying such errors by a weight, usually set inversely proportional to the minority class frequency.
+
+\subsubsection{Dataset Split}
+
+The dataset has been split into training and testing sets with an 85\% ratio for training and a 15\% ratio for testing. This leaves 208 samples for testing and 1178 samples for training.
+
+\section{Models}
+
+The following models have been trained and evaluated on the same dataset split, enabling an equal comparison and evaluation of their performance. They have been developed with Scikit-learn's \citep{scikit-learn}, Pandas's \citep{pandas} and numpy's \citep{numpy} algorithms and documentations. 
+
+\subsection{SVM}
+
+Support Vector Machine (SVM) makes his prediction based on hyperplane divisions on the multidimensional feature space. It is therefore extremely important for the success of the model, to select only the highly explanatory features. 
+
+\subsubsection{Model Workflow Explanation}
+
+We created a flowchart which should help visualize the model.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1.0\textwidth]{FlowChart.png}
+	 \vspace{0em}
+	\caption{Flowchart of the implemented SVM Model}
+\end{figure}
+
+As SVM is so dependent on the selected features, we decided to implement a wrapper method which unifies feature selection and SVM model tuning into a grid search cross validation environment to iterate the method for every combination of hyperparameters possible for both feature selection and SVM. At first, a number K of features are selected to train the SVM. The non selected features are discarded. The selection algorithm we deemed best is ANOVA, because it selects the features whose variance contributes the most to the variance in the label. Since SVMs require highly explanatory features, this selection method aligns perfectly with their requirements. After the filtering process, a Support Vector Machine (SVM) model is fitted with a combination of two hyperparameters: C, which represents the strength of the penalty applied through L2 regularization, and Kernel, which determines the shape of the division between classes.
+
+ \newpage Thanks to pipelining, the same grid search cross validation (5 folds) was used to iterate between all of the combinations of the three hyperparameters:
+ 
+\begin{itemize}
+  \item Feature selection's K: [500, 1000, 1250, 1500, 1750]
+  \item SVM's C: [10, 100, 125, 150, 175]
+  \item SVM's Kernel: ["linear", "poly", "rbf", "sigmoid"]
+\end{itemize}
+
+The best model was then selected using the average from each fold of the ROC AUC score. 
+
+\subsubsection{Model Evaluation}
+
+The model that performed the best during cross validation was an SVM with rbf kernel and C coefficient equal to 125 fitted on 1500 out of the 5999 total features. After retraining the model on the whole training dataset, we evaluated on the test dataset and obtained the following results:
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.6\textwidth]{confusion_matrix_SVM.png}
+	 \vspace{-1em}
+	\caption{Confusion Matrix of the SVM}
+\end{figure}
+
+The statistics calculated from the confusion matrix are the following: 
+\begin{itemize}
+  \item Accuracy:   0.9086538461538461
+  \item Precision:   0.9408284023668639
+  \item Recall:   0.9464285714285714
+  \item F1:   0.9436201780415431
+\end{itemize}
+Accuracy is the lowest of the scores, and this is explained by looking at the confusion matrix. The model is quite good at predicting positive bacteria samples, but performs quite worse in predicting negative samples. As accuracy gives the same importance to both positive and negative samples, it is comprehensibly the lowest score. The calculated ROC AUC score was instead a 0.9149. Overall, the model performed reasonably well, however there still might be space for improvements on the hyperparameters.
+Since the filtering process was itself part of the model and caused the model to perform better, it is not only fair, but also right to compare the model with specific feature selection with the other models, which have selected their features in a different way.
+
+\subsection{Random Forest}
+
+\subsection{Logistic Regression}
+
+\subsection{K Nearest Neighbors}
+
+\section{Conclusion}
 
 
-\begin{normalsize}\color {bluino}
-\noindent Overview of the Dataset:\\
----------------------------------------------------------------------------------------------------------------------------------------------
-\end{normalsize}
+\bibliographystyle{plainnat}
 
-\begin{normalsize}
-
-Antibiotic resistance in bacteria is a critical issue in modern medicine. A study conducted from 2013 to 2015 revealed that an astonishing 87.5\% of the bacteria sampled in North Iran were resistant to at least one antibiotic [1]. It is evident that this percentage has likely increased until now, underscoring the urgency of addressing this topic. Another study published in 2022 successfully compiled a dataset containing mass spectrometer results from more than 300'000 samples of bacteria and fungi. This dataset was then used to train a machine learning model capable of predicting whether a bacteria is resistant to a specific type of antibiotic; with the ultimate goal of prescribing the most effective treatment to a patient [2]. 
-\indent In this project, we only selected the samples used to train for the resistance to Ceftriaxone of Escherichia Coli, with the aim of building and testing different models onto real-world scenarios. 
-
-\end{normalsize}
-
-\begin{normalsize}\color {bluino}
-\hfill\break
-\noindent Data Preprocessing and Visualization:\\
----------------------------------------------------------------------------------------------------------------------------------------------
-\end{normalsize}
-
-\begin{normalsize}
-
-The dataset consists of an integer label, either 1 or 0, indicating resistance to the antibiotic; mass spectrometry results, which are floats ranging from 0 to 1, which have been most likely normalized; and a column named "Unnamed : 0" which has elements of type string. This column contained a serial number ending with either “MALDI\_1” or “MALDI\_2”, suggesting it might relate to the machines used for the observations. To prevent overfitting, we decided to remove this column. Additionally, we checked the dataset for NA and duplicates but found none. 
-The reformatted dataset now consists in 5999 features and one label spanning over 1386 samples. As the dataset contains more features than samples, a feature selection must be performed before fitting with either a filter, wrapper or embedded method. To ensure that some features can be removed without losing too much information, we created a Pearson's correlation matrix of the features and plotted its heat map.
-
-\centering
-\includegraphics[width=0.8\textwidth]{heatmap.png}
+\bibliography{bibliography}
 
 
-qei0gfnoiqnegfqefqgionwhrb0ioegqiapnbehtpogjrfirwnioaegbg wrg0jaev09bsonveiajpvads e90ajgf0'kAEVPOIMSJBPRGAEFKwopeavdsfbkpm
-
-\end{normalsize}
-
-\begin{normalsize}\color {bluino}
-\hfill\break
-\noindent SVM:\\
----------------------------------------------------------------------------------------------------------------------------------------------
-\end{normalsize}
-
-\begin{normalsize}
-
-aafef
-
-\end{normalsize}
-
-\begin{normalsize}\color {bluino}
-\hfill\break
-\noindent Random Forest:\\
----------------------------------------------------------------------------------------------------------------------------------------------
-\end{normalsize}
-
-\begin{normalsize}
-
-aafef
-
-\end{normalsize}
-
-\begin{normalsize}\color {bluino}
-\hfill\break
-\noindent Logistic Regression:\\
----------------------------------------------------------------------------------------------------------------------------------------------
-\end{normalsize}
-
-\begin{normalsize}
-
-aafef
-
-\end{normalsize}
-
-\begin{normalsize}\color {bluino}
-\hfill\break
-\noindent KNN:\\
----------------------------------------------------------------------------------------------------------------------------------------------
-\end{normalsize}
-
-\begin{normalsize}
-
-aafef
-
-\end{normalsize}
-
-\begin{normalsize}\color {bluino}
-\hfill\break
-\noindent Results:\\
----------------------------------------------------------------------------------------------------------------------------------------------
-\end{normalsize}
-
-\begin{normalsize}
-
-aafef
-
-\end{normalsize}
-
-\begin{normalsize}\color {bluino}
-\hfill\break
-\noindent References\\
----------------------------------------------------------------------------------------------------------------------------------------------
-\end{normalsize}
-
-\begin{normalsize}
-
-\noindent[1] Study on antibiotic resistance on bacteria: \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC5629843/}
-[2] 
-
-\end{normalsize}
-
+\end{document}
 
 
 
 
 %%				cd  /Users/user/Desktop/project/project/report 			pdflatex -shell-escape Report.tex
 
+%%															bibtex report   
 
-\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
