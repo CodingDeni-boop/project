@@ -79,8 +79,6 @@ selection must be performed before fitting with either a filter, wrapper or embe
 that some features can be removed without losing too much information, we created a Pearson’s correlation
 matrix of the features and plotted its heatmap with matplotlib \citep{matplotlib} and seaborn \citep{seaborn}.\\
 
-\newpage
-
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\textwidth]{heatmap.png}
@@ -119,7 +117,7 @@ We created a flowchart which should help visualize the model.
 
 As SVM is so dependent on the selected features, we decided to implement a wrapper method which unifies feature selection and SVM model tuning into a grid search cross validation environment to iterate the method for every combination of hyperparameters possible for both feature selection and SVM. At first, a number K of features are selected to train the SVM. The non selected features are discarded. The selection algorithm we deemed best is ANOVA, because it selects the features whose variance contributes the most to the variance in the label. Since SVMs require highly explanatory features, this selection method aligns perfectly with their requirements. After the filtering process, a Support Vector Machine (SVM) model is fitted with a combination of two hyperparameters: C, which represents the strength of the penalty applied through L2 regularization, and Kernel, which determines the shape of the division between classes.
 
- \newpage Thanks to pipelining, the same grid search cross validation (5 folds) was used to iterate between all of the combinations of the three hyperparameters:
+Thanks to pipelining, the same grid search cross validation (5 folds) was used to iterate between all of the combinations of the three hyperparameters:
  
 \begin{itemize}
   \item Feature selection's K: [500, 1000, 1250, 1500, 1750]
