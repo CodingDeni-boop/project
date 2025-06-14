@@ -61,8 +61,7 @@ The scientific hypothesis tested in this study is that classical machine learnin
 \subsection{Data Wrangling and Visualization}
 \textbf{\textit{Maybe add Data source? 
 }}The dataset consists of an integer label, either 1 or 0, indicating resistance to the antibiotic; mass
-spectrometry results, which are floats ranging from 0 to 1, which have been most likely normalized; and a
-column named ”Unnamed : 0” which has elements of type string. This column contained a serial number
+spectrometry results, which are floats ranging from 0 to 1, which have been most likely normalized; and a column named ”Unnamed : 0” which has elements of type string. This column contained a serial number
 ending with either “MALDI\_1” or “MALDI\_2”, suggesting it might relate to the machines used for the
 observations. To prevent overfitting, we decided to remove this column. Additionally, we checked the
 dataset for NA and duplicates but found none. The reformatted dataset now consists in 5999 features
@@ -72,14 +71,14 @@ and one label spanning over 1386 samples.
 
 As the dataset contains more features than samples, a feature
 selection must be performed before fitting with either a filter, wrapper or embedded method. To ensure
-that some features can be removed without losing too much information, we created a Pearson’s correlation
-matrix of the features and plotted its heatmap with matplotlib \citep{matplotlib} and seaborn \citep{seaborn}.\\
+that some features can be removed without losing too much information, we created a Pearson’s correlation matrix of the features and plotted its heatmap (Figure \ref{fig:Heatmap of Pearson's correlation matrix}) with matplotlib \citep{matplotlib} and seaborn \citep{seaborn}.\\
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\textwidth]{heatmap.png}
 	 \vspace{-3em}
 	\caption{Heatmap of Pearson's correlation matrix}
+    \label{fig:Heatmap of Pearson's correlation matrix}
 \end{figure}
 
 Except the trivial white line that divides the heatmap in half, there are numerous white and dark blue spots, which indicate high positive or negative correlation. Thanks to the graph we can safely assume that most of the variable are correlated, and therefore a filter will not only diminish the probability of overfitting (as mentioned earlier, a higher number of features than samples must always be avoided), but also focus the attention of the model onto non-collinear and highly explanatory features. 
@@ -147,13 +146,15 @@ Support Vector Machine (SVM) makes his prediction based on hyperplane divisions 
 
 \subsubsection{Model Workflow Explanation}
 
-We created a flowchart which should help visualize the model.
+We created a flowchart (Figure \ref{fig:Flowchart of the implemented SVM Model}) which should help visualize the model.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1.0\textwidth]{FlowChart.png}
 	 \vspace{0em}
 	\caption{Flowchart of the implemented SVM Model}
+    \label{fig:Flowchart of the implemented SVM Model}
+    
 \end{figure}
 
 As SVM is so dependent on the selected features, we decided to implement a wrapper method which unifies feature selection and SVM model tuning into a grid search cross validation environment to iterate the method for every combination of hyperparameters possible for both feature selection and SVM. At first, a number K of features are selected to train the SVM. The non selected features are discarded. The selection algorithm we deemed best is ANOVA, because it selects the features whose variance contributes the most to the variance in the label. Since SVMs require highly explanatory features, this selection method aligns perfectly with their requirements. After the filtering process, a Support Vector Machine (SVM) model is fitted with a combination of two hyperparameters: C, which represents the strength of the penalty applied through L2 regularization, and Kernel, which determines the shape of the division between classes.
@@ -177,9 +178,10 @@ The model that performed the best during cross validation was an SVM with rbf ke
 	\includegraphics[width=0.6\textwidth]{confusion_matrix_SVM.png}
 	 \vspace{-1em}
 	\caption{Confusion Matrix of the SVM}
+    \label{fig:Confusion Matrix of the SVM}
 \end{figure}
 
-The statistics calculated from the confusion matrix are the following: 
+The statistics calculated from the confusion matrix (Figure \ref{fig:Confusion Matrix of the SVM})are the following: 
 \begin{itemize}
   \item Accuracy:   0.9086538461538461
   \item Precision:   0.9408284023668639
@@ -212,6 +214,7 @@ From the confusion matrix, the following performance metrics were calculated:
 \begin{table}[h]
 \centering
 \caption{Random Forest Performance Metrics}
+\label{tab:Random Forest Performance Metrics}
 \begin{tabular}{lr}
 \toprule
 \textbf{Metric} & \textbf{Score} \\
@@ -225,7 +228,7 @@ F1 Score  & 0.9051 \\
 \end{tabular}
 \end{table}
 
-The Random Forest model demonstrated a perfect recall (1.0), correctly identifying all resistant samples. However, this high recall came at the cost of a lower precision (0.8267), indicating a relatively higher false-positive rate. Such a trade-off is crucial to consider in clinical diagnostics, where failing to identify resistant cases could have severe implications.
+Table \ref{tab:Random Forest Performance Metrics} shows that the Random Forest model demonstrated a perfect recall (1.0); correctly identifying all resistant samples. However, this high recall came at the cost of a lower precision (0.8267), indicating a relatively higher false-positive rate. Such a trade-off is crucial to consider in clinical diagnostics, where failing to identify resistant cases could have severe implications.
 
 We also extracted feature importances from the trained model. The most important features were those corresponding to spectral bins 109, 51, 78, and 740, among others. These may relate to biologically meaningful patterns, although further biochemical interpretation would be required.
 
