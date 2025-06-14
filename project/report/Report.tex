@@ -59,12 +59,13 @@ train a machine learning model capable of predicting whether a bacteria is resis
 antibiotic; with the ultimate goal of prescribing the most effective treatment to a patient \citep{datasetExplaination}. In this
 project, we only selected the samples used to train for the resistance to Ceftriaxone of Escherichia Coli,
 with the aim of building and testing different models onto real-world scenarios.
+\textbf{\textit{We aim to predict Escherichia coli Ceftriaxone resistance using MALDI-TOF spectra. Our hypothesis is that classical machine learning algorithms can achieve clinically relevant performance (ROC AUC > 0.85).}}
 
 \section{Methods}
 
 \subsection{Data Wrangling and Visualization}
-
-The dataset consists of an integer label, either 1 or 0, indicating resistance to the antibiotic; mass
+\textbf{\textit{Maybe add Data source? 
+}}The dataset consists of an integer label, either 1 or 0, indicating resistance to the antibiotic; mass
 spectrometry results, which are floats ranging from 0 to 1, which have been most likely normalized; and a
 column named ”Unnamed : 0” which has elements of type string. This column contained a serial number
 ending with either “MALDI\_1” or “MALDI\_2”, suggesting it might relate to the machines used for the
@@ -95,6 +96,16 @@ Another issue that must be addressed is the class imbalance; 81.5\% of the bacte
 \subsubsection{Dataset Split}
 
 The dataset has been split into training and testing sets with an 85\% ratio for training and a 15\% ratio for testing. This leaves 208 samples for testing and 1178 samples for training.
+
+\subsection{Models}
+\subsubsection{SVM}
+\subsubsection{Random Forest}
+\subsubsection{Logistic Regression}
+\subsubsection{K Nearest Neighbors}
+
+\subsection{Evaluations Metrics ?}
+\textbf{\textit{Clearly justify selected metrics given imbalanced classification scenario:
+ROC AUC, Precision, Recall, F1-score, Accuracy.}}
 
 \section{Results}
 
