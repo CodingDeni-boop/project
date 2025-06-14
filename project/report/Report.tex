@@ -152,6 +152,34 @@ Since the filtering process was itself part of the model and caused the model to
 
 \subsection{Random Forest}
 
+Random Forest (RF) is an ensemble method that constructs multiple decision trees during training and outputs the mode of their predictions. In our implementation, we used class balancing to address the dataset's imbalance and performed hyperparameter tuning via grid search with 5-fold cross-validation. We optimized the number of trees (`n_estimators`), the maximum depth of trees (`max_depth`), and the minimum number of samples required to split a node (`min_samples_split`).
+
+\subsubsection{Model Evaluation}
+
+The best performing configuration was:
+\begin{itemize}
+    \item n\_estimators = 500
+    \item max\_depth = 20
+    \item min\_samples\_split = 5
+\end{itemize}
+
+This model achieved the following results on the test set:
+\begin{itemize}
+    \item Accuracy: 0.8317
+    \item Precision: 0.8267
+    \item Recall: \textbf{1.0}
+    \item F1 Score: 0.9051
+    \item ROC AUC: 0.8192
+\end{itemize}
+
+The perfect recall score is particularly notable: the model correctly identified all resistant bacteria. However, this came at the cost of a higher false positive rate, which lowered the precision. This trade-off is relevant in clinical settings where avoiding false negatives is critical. Feature importance analysis also identified the top 10 most influential spectral bins, such as features 109, 51, 78, and 740.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{confusion_matrix_Random_Forest.png}
+\caption{Confusion Matrix of the Random Forest Classifier}
+\end{figure}
+
 \subsection{Logistic Regression}
 
 \subsection{K Nearest Neighbors}
