@@ -52,25 +52,21 @@ Antibiotic resistance is a growing global health threat, requiring fast and accu
 
 Antibiotic resistance is a rapidly escalating global health threat, significantly complicating the treatment of bacterial infections and leading to higher mortality, morbidity, and healthcare costs worldwide. Recent data underscore the severity of this issue; for example, a systematic review conducted by \citet{IranBacteria} revealed that 87.5\% of bacterial isolates obtained from clinical specimens in Northern Iran showed resistance to at least one commonly prescribed antibiotic. Given ongoing selective pressure, this alarming prevalence is likely even higher today, emphasizing the critical need for effective diagnostic tools to rapidly identify resistant strains and guide therapeutic decisions.
 Matrix-Assisted Laser Desorption/Ionization Time-of-Flight (MALDI-TOF) mass spectrometry has emerged as a powerful technique for rapid microbial identification and characterization. A recent large-scale study compiled MALDI-TOF mass spectra from over 300,000 bacterial and fungal samples and successfully applied machine learning techniques to predict antimicrobial resistance phenotypes directly from these spectra \citep{datasetExplaination, Astudillo2024}. Leveraging such techniques could significantly reduce the time required for identifying resistance profiles compared to traditional phenotypic testing methods.
-In this project, we specifically focus on evaluating the predictive capabilities of classical machine learning models—Support Vector Machine (SVM), Logistic Regression, Random Forest, and k-Nearest Neighbors (kNN)—for detecting Ceftriaxone resistance in \textit{Escherichia coli} using MALDI-TOF spectra from the publicly available DRIAMS dataset. Our primary aim is to assess the real-world applicability and performance of these machine learning algorithms in accurately distinguishing Ceftriaxone-resistant strains from sensitive ones.
+In this project, we specifically focus on evaluating the predictive capabilities of classical machine learning models—Support Vector Machine (SVM), Logistic Regression, Random Forest, and k-Nearest Neighbors (kNN)—for detecting Ceftriaxone resistance in \textit{Escherichia coli} using MALDI-TOF spectra DRIAMS dataset. Our primary aim is to assess the real-world applicability and performance of these machine learning algorithms in accurately distinguishing Ceftriaxone-resistant strains from sensitive ones.
 
 The scientific hypothesis tested in this study is that classical machine learning algorithms, trained on MALDI-TOF spectral data, can achieve clinically relevant performance (ROC AUC > 0.85) in predicting Ceftriaxone resistance in \textit{Escherichia coli}.
 
 \section{Methods}
 
-\subsection{Data Wrangling and Visualization}
-\textbf{\textit{Maybe add Data source? 
-}}The dataset consists of an integer label, either 1 or 0, indicating resistance to the antibiotic; mass
-spectrometry results, which are floats ranging from 0 to 1, which have been most likely normalized; and a column named ”Unnamed : 0” which has elements of type string. This column contained a serial number
-ending with either “MALDI\_1” or “MALDI\_2”, suggesting it might relate to the machines used for the
-observations. To prevent overfitting, we decided to remove this column. Additionally, we checked the
-dataset for NA and duplicates but found none. The reformatted dataset now consists in 5999 features
-and one label spanning over 1386 samples. 
+\subsection{Data Source}
+The dataset used in this study was obtained from the publicly available DRIAMS database, which contains MALDI-TOF mass spectrometry data collected from clinical bacterial and fungal isolates \citep{datasetExplaination}. Specifically, we focused on 1368 clinical isolates of \textit{Escherichia coli}, tested for resistance against Ceftriaxone.
 
-\subsubsection{Avoiding the Curse of Dimensionality}
+\subsection{Data Preprocessing}
+The dataset initially contained 5999 spectral features (normalized intensities between 0 and 1), an integer label (1 for resistant, 0 for sensitive), and a metadata column labeled "Unnamed: 0" identifying the MALDI-TOF instrument used (“MALDI\_1” or “MALDI\_2”). To prevent potential model bias or overfitting based on instrumentation differences, the metadata column was removed. Data was further checked for missing values and duplicate entries; neither were found.
 
-As the dataset contains more features than samples, a feature
-selection must be performed before fitting with either a filter, wrapper or embedded method. To ensure
+\subsection{Feature Selection}
+As the dataset contains more features than samples (5999 features vs. 1368 samples), a feature
+selection needed to be performed before fitting with either a filter, wrapper or embedded method. To ensure
 that some features can be removed without losing too much information, we created a Pearson’s correlation matrix of the features and plotted its heatmap (Figure \ref{fig:Heatmap of Pearson's correlation matrix}) with matplotlib \citep{matplotlib} and seaborn \citep{seaborn}.\\
 
 \begin{figure}
@@ -83,65 +79,18 @@ that some features can be removed without losing too much information, we create
 
 Except the trivial white line that divides the heatmap in half, there are numerous white and dark blue spots, which indicate high positive or negative correlation. Thanks to the graph we can safely assume that most of the variable are correlated, and therefore a filter will not only diminish the probability of overfitting (as mentioned earlier, a higher number of features than samples must always be avoided), but also focus the attention of the model onto non-collinear and highly explanatory features. 
 
-\subsubsection{Assessing Class Imbalance}
-
+\subsection{Class Imbalance Handling}
 Another issue that must be addressed is the class imbalance; 81.5\% of the bacteria samples are resistant to Ceftriaxone, and only 18.5\% are not. There are several ways to help the model focus more onto the minority class. One solution is undersampling the majority class, but we ruled this out, because our dataset already has a relatively low number of samples. Another solution is oversampling the minority, but we rejected it because the duplicated samples would have identical values, therefore increasing the chance of overfitting which is already a concern with this dataset. The solution we chose as best is balancing the class weight in the model. This method doesn't involve dataset alterations, it instead adjusts the training process by giving more importance to mistakes made on the minority class. Specifically, by multiplying such errors by a weight, usually set inversely proportional to the minority class frequency.
 
-\subsubsection{Dataset Split}
+\subsection{Dataset Split}
 
 The dataset has been split into training and testing sets with an 85\% ratio for training and a 15\% ratio for testing. This leaves 208 samples for testing and 1178 samples for training.
 
-\subsection{Models}
-\subsubsection{SVM}
-Text here
+\subsection{Machine Learning Models}
 
-\subsubsection{Random Forest}
-Random Forest (RF) is an ensemble learning algorithm that builds multiple decision trees during training and outputs the class that is the mode of the classes predicted by individual trees. Random Forest was selected for its robustness to noisy and high-dimensional datasets, ease of use, and inherent handling of non-linear relationships without extensive data preprocessing.
+We evaluated four classical machine learning models, each briefly described and tuned explicitly using grid search with 5-fold cross-validation to optimize predictive performance:
 
-To optimize model performance, we performed hyperparameter tuning using grid search with 5-fold cross-validation. The hyperparameters considered were:
-
-\begin{itemize}
-    \item \textbf{Number of Trees (\texttt{n\_estimators})}: [300, 350, 400, 450, 500].
-    \item \textbf{Maximum Tree Depth (\texttt{max\_depth})}: [None, 10, 20].
-    \item \textbf{Minimum Samples for Node Splitting (\texttt{min\_samples\_split})}: [2, 5, 10].
-\end{itemize}
-
-To address the significant class imbalance present in the dataset (81.5\% resistant vs. 18.5\% sensitive), the parameter \texttt{class\_weight="balanced"} was set, ensuring increased penalization of misclassification errors for the minority class during training.
-
-Hyperparameter tuning was evaluated using the Receiver Operating Characteristic Area Under the Curve (ROC AUC), specifically selected for its effectiveness in evaluating models trained on imbalanced datasets. This aligns with our aim of achieving clinically relevant predictive performance (ROC AUC > 0.85).
-
-\subsubsection{Logistic Regression}
-Text here
-
-\subsubsection{K Nearest Neighbors}
-Text here
-
-
-\subsection{Evaluation Metrics}
-
-Given the highly imbalanced nature of our dataset (81.5\% resistant vs. 18.5\% sensitive samples), standard accuracy alone is insufficient to reliably evaluate predictive performance. To address this, we employed multiple complementary evaluation metrics specifically chosen for their effectiveness in assessing performance on imbalanced data:
-
-\begin{itemize}
-    \item \textbf{ROC AUC (Receiver Operating Characteristic Area Under the Curve):} 
-    ROC AUC provides a robust measure of model performance independent of the classification threshold, specifically capturing the model's ability to distinguish between resistant and sensitive cases. A ROC AUC greater than 0.85 was predefined as clinically relevant.
-
-    \item \textbf{Precision:} Precision is the proportion of positive identifications (predicted resistant) that are actually resistant. High precision ensures that the model minimizes false positives, reducing unnecessary or inappropriate treatments.
-
-    \item \textbf{Recall (Sensitivity):} Recall is the proportion of actual resistant cases correctly identified by the model. High recall is crucial clinically, as failing to identify a resistant strain can lead to ineffective treatment.
-
-    \item \textbf{F1 Score:} The harmonic mean of precision and recall provides a balanced measure of performance when classes are imbalanced, reflecting the trade-off between precision and recall clearly.
-
-    \item \textbf{Accuracy:} While accuracy provides an overall performance summary, it should be interpreted cautiously due to its bias in imbalanced scenarios. We include it primarily as a baseline reference.
-\end{itemize}
-
-These metrics collectively provide a comprehensive evaluation of each model, enabling clear insight into the practical strengths and weaknesses of each approach.
-
-\section{Results}
-
-The following models have been trained and evaluated on the same dataset split, enabling an equal comparison and evaluation of their performance. They have been developed with Scikit-learn's \citep{scikit-learn}, Pandas's \citep{pandas} and numpy's \citep{numpy} algorithms and documentations. 
-
-\subsection{SVM}
-
+\subsubsection{Support Vector Machine (SVM)}
 Support Vector Machine (SVM) makes his prediction based on hyperplane divisions on the multidimensional feature space. It is therefore extremely important for the success of the model, to select only the highly explanatory features. 
 
 \subsubsection{Model Workflow Explanation}
@@ -169,7 +118,50 @@ Thanks to pipelining, the same grid search cross validation (5 folds) was used t
 
 The best model was then selected using the average from each fold of the ROC AUC score. 
 
-\subsubsection{Model Evaluation}
+\subsubsection{Random Forest (RF)}
+Random Forest (RF) is an ensemble learning algorithm that builds multiple decision trees during training and outputs the class that is the mode of the classes predicted by individual trees. Random Forest was selected for its robustness to noisy and high-dimensional datasets, ease of use, and inherent handling of non-linear relationships without extensive data preprocessing.
+
+To optimize model performance, we performed hyperparameter tuning using grid search with 5-fold cross-validation. The hyperparameters considered were:
+
+\begin{itemize}
+    \item \textbf{Number of Trees (\texttt{n\_estimators})}: [300, 350, 400, 450, 500].
+    \item \textbf{Maximum Tree Depth (\texttt{max\_depth})}: [None, 10, 20].
+    \item \textbf{Minimum Samples for Node Splitting (\texttt{min\_samples\_split})}: [2, 5, 10].
+\end{itemize}
+
+To address the significant class imbalance present in the dataset (81.5\% resistant vs. 18.5\% sensitive), the parameter \texttt{class\_weight="balanced"} was set, ensuring increased penalization of misclassification errors for the minority class during training.
+
+Hyperparameter tuning was evaluated using the Receiver Operating Characteristic Area Under the Curve (ROC AUC), specifically selected for its effectiveness in evaluating models trained on imbalanced datasets. This aligns with our aim of achieving clinically relevant predictive performance (ROC AUC > 0.85).
+---
+RF was chosen for its robustness to noisy and high-dimensional data and interpretability via feature importance. Hyperparameters included:
+\begin{itemize}
+    \item Number of Trees (\texttt{n\_estimators}): [300, 350, 400, 450, 500]
+    \item Maximum Tree Depth (\texttt{max\_depth}): [None, 10, 20]
+    \item Minimum Samples Split (\texttt{min\_samples\_split}): [2, 5, 10]
+    \item Class weighting: "balanced"
+\end{itemize}
+
+\subsubsection{Logistic Regression}
+Text here
+
+\subsubsection{k-Nearest Neighbors (kNN)}
+Text here
+
+\subsection{Evaluation Metrics}
+Given the highly imbalanced nature of our dataset (81.5\% resistant vs. 18.5\% sensitive samples), standard accuracy alone is insufficient to reliably evaluate predictive performance. To address this, we employed multiple complementary evaluation metrics specifically chosen for their effectiveness in assessing performance on imbalanced data:
+\begin{itemize}
+    \item \textbf{ROC AUC:} Primary metric assessing model discrimination independently from class thresholds.
+    \item \textbf{Precision and Recall:} Measures to interpret false positive/negative trade-offs explicitly.
+    \item \textbf{F1-Score:} Harmonic mean balancing precision and recall.
+    \item \textbf{Accuracy:} Provided as a reference but interpreted cautiously given class imbalance.
+\end{itemize}
+These metrics collectively provide a comprehensive evaluation of each model, enabling clear insight into the practical strengths and weaknesses of each approach.
+
+\section{Results}
+
+The following models have been trained and evaluated on the same dataset split, enabling an equal comparison and evaluation of their performance. They have been developed with Scikit-learn's \citep{scikit-learn}, Pandas's \citep{pandas} and numpy's \citep{numpy} algorithms and documentations. 
+
+\subsection{SVM}
 
 The model that performed the best during cross validation was an SVM with rbf kernel and C coefficient equal to 125 fitted on 1500 out of the 5999 total features. After retraining the model on the whole training dataset, we evaluated on the test dataset and obtained the following results:
 
