@@ -49,9 +49,7 @@ Antibiotic resistance is a growing global health threat, requiring fast and accu
 \end{abstract}
 
 
-\section{Overview and Preprocessing}
-
-\subsection{Introduction to the Dataset}
+\section{Introduction}
 
 Antibiotic resistance in bacteria is a critical issue in modern medicine. A study conducted by \citet{IranBacteria} revealed that an astonishing 87.5\% of the bacteria sampled in North Iran were resistant to at least
 one antibiotic. It is evident that this percentage has likely increased until now, underscoring the urgency
@@ -61,6 +59,8 @@ train a machine learning model capable of predicting whether a bacteria is resis
 antibiotic; with the ultimate goal of prescribing the most effective treatment to a patient \citep{datasetExplaination}. In this
 project, we only selected the samples used to train for the resistance to Ceftriaxone of Escherichia Coli,
 with the aim of building and testing different models onto real-world scenarios.
+
+\section{Methods}
 
 \subsection{Data Wrangling and Visualization}
 
@@ -96,7 +96,7 @@ Another issue that must be addressed is the class imbalance; 81.5\% of the bacte
 
 The dataset has been split into training and testing sets with an 85\% ratio for training and a 15\% ratio for testing. This leaves 208 samples for testing and 1178 samples for training.
 
-\section{Models}
+\section{Results}
 
 The following models have been trained and evaluated on the same dataset split, enabling an equal comparison and evaluation of their performance. They have been developed with Scikit-learn's \citep{scikit-learn}, Pandas's \citep{pandas} and numpy's \citep{numpy} algorithms and documentations. 
 
@@ -199,7 +199,7 @@ Overall, Random Forest demonstrated strong generalization performance and robust
 
 \subsection{K Nearest Neighbors}
 
-\section{Conclusion}
+\section{Discussion}
 
 ONLY A DRAFT
 
