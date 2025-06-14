@@ -132,14 +132,6 @@ To optimize model performance, we performed hyperparameter tuning using grid sea
 To address the significant class imbalance present in the dataset (81.5\% resistant vs. 18.5\% sensitive), the parameter \texttt{class\_weight="balanced"} was set, ensuring increased penalization of misclassification errors for the minority class during training.
 
 Hyperparameter tuning was evaluated using the Receiver Operating Characteristic Area Under the Curve (ROC AUC), specifically selected for its effectiveness in evaluating models trained on imbalanced datasets. This aligns with our aim of achieving clinically relevant predictive performance (ROC AUC > 0.85).
----
-RF was chosen for its robustness to noisy and high-dimensional data and interpretability via feature importance. Hyperparameters included:
-\begin{itemize}
-    \item Number of Trees (\texttt{n\_estimators}): [300, 350, 400, 450, 500]
-    \item Maximum Tree Depth (\texttt{max\_depth}): [None, 10, 20]
-    \item Minimum Samples Split (\texttt{min\_samples\_split}): [2, 5, 10]
-    \item Class weighting: "balanced"
-\end{itemize}
 
 \subsubsection{Logistic Regression}
 Text here
