@@ -93,7 +93,7 @@ We evaluated four classical machine learning models, each briefly described and 
 \subsubsection{Support Vector Machine (SVM)}
 Support Vector Machine (SVM) makes his prediction based on hyperplane divisions on the multidimensional feature space. It is therefore extremely important for the success of the model, to select only the highly explanatory features. 
 
-\subsubsection{Model Workflow Explanation}
+\textbf{Model Workflow Explanation}
 
 We created a flowchart (Figure \ref{fig:Flowchart of the implemented SVM Model}) which should help visualize the model.
 
@@ -226,40 +226,34 @@ Text here
 
 \section{Discussion}
 
-ONLY A DRAFT
+\subsection{Interpretation of Results}
 
-Our analysis investigated the use of machine learning models to predict resistance to Ceftriaxone in \textit{Escherichia coli} using MALDI-TOF mass spectrometry data from the DRIAMS dataset. The motivation stems from the pressing global issue of antimicrobial resistance (AMR), which is predicted to cause up to 10 million deaths annually by 2050 if unaddressed \citep{doi:10.1016/S1473-3099(15)70136-9}. Rapid diagnostics, particularly those leveraging high-throughput phenotypic data such as MALDI-TOF, offer promising avenues to inform clinical treatment decisions.
+Our analysis evaluated four classical machine learning models—Logistic Regression (LR), Support Vector Machine (SVM), Random Forest (RF), and k-Nearest Neighbors (kNN)—to predict Ceftriaxone resistance in \textit{Escherichia coli} using MALDI-TOF mass spectrometry data. Each model demonstrated distinct strengths and weaknesses relevant to clinical applications.
 
-Our dataset consisted of 1368 samples and 5999 spectral features, with a highly imbalanced distribution where ~81.5\% of samples were resistant to Ceftriaxone. We implemented four models—Support Vector Machine (SVM), Random Forest (RF), Logistic Regression (LR), and k-Nearest Neighbors (kNN)—and applied different strategies for feature selection and hyperparameter optimization. The models were evaluated on a held-out test set using metrics such as accuracy, precision, recall, F1 score, and ROC AUC.
+Logistic Regression emerged as the top performer, achieving the highest ROC AUC (0.911) and F1 score (0.939). Its superior performance likely resulted from effective feature selection via forward selection and L1 regularization, allowing it to identify a sparse set of biologically significant spectral features strongly associated with resistance phenotypes.
 
-The Logistic Regression model, regularized via L1 penalty and paired with forward feature selection, performed best overall in terms of ROC AUC (0.911) and F1 score (0.939). This aligns with findings in the literature such as Weis et al. (2022) \citep{doi:10.1038/s41591-021-01619-9}, where logistic models were also found to perform competitively for AMR prediction when features were appropriately selected. SVM also showed balanced performance (AUC: 0.876), while Random Forest stood out for achieving perfect recall (1.000), correctly identifying all resistant samples. However, its lower precision (0.827) indicated a higher false positive rate, which could reduce clinical efficiency if used in isolation.
+Support Vector Machine also showed robust and balanced predictive performance, with an ROC AUC of 0.9149 and high precision (0.941) and recall (0.946). The optimal hyperparameters for the SVM model—rbf kernel and a C value of 125—enabled effective handling of complex feature interactions, demonstrating its capability to distinguish resistant and sensitive strains reliably.
 
-In contrast, kNN achieved a high recall (0.958) and F1 score (0.907), but underperformed on ROC AUC (0.797), highlighting the model’s sensitivity to feature scaling and dimensionality. These findings reinforce the need to match model complexity to data characteristics and use case objectives: for example, models prioritizing recall are suitable for initial triage, whereas those maximizing precision may be better for guiding treatment.
+Random Forest provided perfect recall (1.0), identifying all resistant samples correctly, a critical attribute for screening applications where missing a resistant case could lead to severe clinical implications. However, the lower precision (0.827) indicated a trade-off with a higher false-positive rate, suggesting that RF could be ideally suited for initial resistance screening, followed by confirmatory testing with models prioritizing specificity.
 
-\subsection*{Relation to Previous Work}
-Our findings build upon the growing body of research leveraging MALDI-TOF spectra for AMR classification. Weis et al. (2022) demonstrated the effectiveness of convolutional neural networks on the same DRIAMS data, reporting AUC values between 0.85 and 0.93 depending on the species-antibiotic pair \citep{doi:10.1038/s41591-021-01619-9}. Our classical models, particularly Logistic Regression and SVM, achieved comparable performance with significantly lower computational overhead and greater interpretability.
+Lastly, the k-Nearest Neighbors model displayed relatively lower performance with an ROC AUC of 0.797. Although it achieved a commendable recall (0.958) and F1 score (0.907), the lower overall discrimination capability likely resulted from sensitivity to the high dimensionality and potential scaling issues inherent in spectral data. This outcome underscores the importance of careful preprocessing and feature selection tailored specifically for kNN.
 
-Other work, such as Brackmann et al. (2023) \citep{doi:10.1093/cid/ciad080}, emphasizes the practical value of integrating such models into laboratory workflows, particularly in resource-constrained environments where rapid deep learning deployment is less feasible. Our results support these observations and demonstrate that simpler models—when tuned effectively—can be viable alternatives.
+Collectively, these results highlight the importance of aligning model selection and tuning strategies to the dataset characteristics and intended clinical use-case. Logistic Regression and SVM provided balanced and interpretable solutions suitable for direct diagnostic decision-making, while Random Forest's perfect recall could be leveraged in preliminary screening applications. The kNN results stress the need for precise data preprocessing and dimension reduction methods to achieve optimal performance.
 
-\subsection*{Limitations}
-There are several limitations to our work:
-\begin{itemize}
-    \item \textbf{Data Imbalance:} While we applied class weighting, more advanced techniques such as SMOTE or generative augmentation could improve model robustness.
-    \item \textbf{Biological Interpretation:} The spectral features used are not annotated with biological markers, limiting interpretability of the most predictive features.
-    \item \textbf{Cross-Institution Generalizability:} Our train-test split was random and not stratified by source institution, so real-world generalization to new hospitals is untested.
-    \item \textbf{Model Scope:} We only tested four models. Other techniques, such as gradient boosting or neural networks, may provide better results.
-\end{itemize}
+\subsection{Comparison to Previous Work}
 
-\subsection*{Outlook}
-To further validate the applicability of these models, future work should explore:
-\begin{itemize}
-    \item \textbf{Cross-institution validation:} Training on data from one hospital and testing on another to test generalizability.
-    \item \textbf{Feature interpretation:} Using methods such as SHAP or LIME to link predictive peaks to known resistance genes or protein signatures.
-    \item \textbf{Expanded model comparison:} Including deep learning architectures and ensemble methods.
-    \item \textbf{Clinical integration:} Assessing model performance when embedded into real diagnostic pipelines.
-\end{itemize}
+Our findings align closely with Weis et al. (2022), who also demonstrated comparable performance (ROC AUC 0.85-0.93) using convolutional neural networks on MALDI-TOF spectra. Notably, our classical models (Logistic Regression and SVM) achieved similar predictive accuracy but with significantly reduced computational complexity and enhanced interpretability, valuable traits for clinical integration. Astudillo et al. (2024) further support our results, highlighting Random Forest and Logistic Regression's utility and effectiveness in rapid, accurate antibiotic resistance prediction using MALDI-TOF data.
 
-In summary, we demonstrate that classical machine learning models can predict Ceftriaxone resistance in \textit{E. coli} using MALDI-TOF spectra with reasonable performance. Logistic Regression and SVM models offer a good balance between accuracy and interpretability, while Random Forest provides high sensitivity. These results affirm the feasibility of data-driven tools in antimicrobial resistance diagnostics and set a foundation for further study and clinical translation.
+\subsection{Limitations and Suggested Improvements}
+
+This study has several limitations. Although we used class weighting to address the dataset's imbalance, advanced methods like SMOTE or generative models could enhance generalizability. The absence of annotated biological markers for spectral features restricts interpretability; future work should integrate genomic or proteomic analyses to associate spectral peaks with known resistance mechanisms explicitly. Additionally, our model evaluation utilized a random train-test split without institutional stratification, potentially limiting cross-institutional generalizability. Lastly, assessing only classical models limits exploration of potentially superior machine learning methods such as gradient boosting or neural network architectures.
+
+\subsection{Conclusions and Future Outlook}
+
+Future investigations should implement cross-institutional validation to evaluate robustness and clinical applicability thoroughly. Integrating model-agnostic interpretation methods like SHAP or LIME could clarify biological relevance and foster clinical acceptance. Broadening model comparisons to include advanced architectures like XGBoost or deep learning might further enhance predictive performance. Lastly, assessing practical clinical integration, including turnaround time, diagnostic accuracy, and patient outcomes, is paramount for translating these methods into routine diagnostic use.
+
+Overall, our results affirm that classical machine learning models can effectively predict Ceftriaxone resistance in \textit{E. coli} from MALDI-TOF spectra, providing a promising foundation for future validation, interpretation, and clinical integration.
+
 
 
 \bibliographystyle{plainnat}
