@@ -152,33 +152,50 @@ Since the filtering process was itself part of the model and caused the model to
 
 \subsection{Random Forest}
 
-Random Forest (RF) is an ensemble method that constructs multiple decision trees during training and outputs the mode of their predictions. In our implementation, we used class balancing to address the dataset's imbalance and performed hyperparameter tuning via grid search with 5-fold cross-validation. We optimized the number of trees (`n_estimators`), the maximum depth of trees (`max_depth`), and the minimum number of samples required to split a node (`min_samples_split`).
+Random Forest (RF) is an ensemble learning method that constructs a multitude of decision trees during training and outputs the class that is the mode of the classes predicted by individual trees. Due to its robustness and ability to handle large feature sets without requiring extensive preprocessing, Random Forest was chosen as one of the main models for this analysis.
+
+\subsubsection{Model Workflow Explanation}
+
+The RF implementation in our pipeline was tuned using a grid search with 5-fold cross-validation. The following hyperparameters were selected for tuning:
+
+\begin{itemize}
+  \item n\_estimators: [300, 350, 400, 450, 500] -- number of trees in the forest
+  \item max\_depth: [None, 10, 20] -- maximum depth of each tree
+  \item min\_samples\_split: [2, 5, 10] -- minimum samples required to split an internal node
+\end{itemize}
+
+The class imbalance was addressed by setting \texttt{class\_weight} to "balanced", ensuring that the model penalizes mistakes on the minority class more heavily. The evaluation criterion used during the grid search was ROC AUC, in line with the other models.
 
 \subsubsection{Model Evaluation}
 
-The best performing configuration was:
+The best model configuration found was:
 \begin{itemize}
     \item n\_estimators = 500
     \item max\_depth = 20
     \item min\_samples\_split = 5
 \end{itemize}
 
-This model achieved the following results on the test set:
+Retraining this model on the full training set and evaluating it on the test set yielded the following results:
 \begin{itemize}
-    \item Accuracy: 0.8317
-    \item Precision: 0.8267
-    \item Recall: \textbf{1.0}
-    \item F1 Score: 0.9051
-    \item ROC AUC: 0.8192
+  \item Accuracy: 0.8317
+  \item Precision: 0.8267
+  \item Recall: 1.0000
+  \item F1 Score: 0.9051
+  \item ROC AUC: 0.8192
 \end{itemize}
 
-The perfect recall score is particularly notable: the model correctly identified all resistant bacteria. However, this came at the cost of a higher false positive rate, which lowered the precision. This trade-off is relevant in clinical settings where avoiding false negatives is critical. Feature importance analysis also identified the top 10 most influential spectral bins, such as features 109, 51, 78, and 740.
-
 \begin{figure}[h]
-\centering
-\includegraphics[width=0.6\textwidth]{confusion_matrix_Random_Forest.png}
-\caption{Confusion Matrix of the Random Forest Classifier}
+  \centering
+  \includegraphics[width=0.6\textwidth]{confusion_matrix_Random_Forest.png}
+  \vspace{-1em}
+  \caption{Confusion Matrix of the Random Forest Classifier}
 \end{figure}
+
+The model achieved a perfect recall, successfully identifying all resistant cases in the test set. However, this high sensitivity came at the cost of a lower precision, indicating a higher number of false positives. This trade-off is significant in clinical applications where false negatives may lead to severe consequences. 
+
+We also extracted feature importances from the trained model. The most important features were those corresponding to spectral bins 109, 51, 78, and 740, among others. These may relate to biologically meaningful patterns, although further biochemical interpretation would be required.
+
+Overall, Random Forest demonstrated strong generalization performance and robustness to feature selection, with particularly valuable recall in the context of resistance prediction.
 
 \subsection{Logistic Regression}
 
