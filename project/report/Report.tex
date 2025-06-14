@@ -51,15 +51,13 @@ Antibiotic resistance is a growing global health threat, requiring fast and accu
 
 \section{Introduction}
 
-Antibiotic resistance in bacteria is a critical issue in modern medicine. A study conducted by \citet{IranBacteria} revealed that an astonishing 87.5\% of the bacteria sampled in North Iran were resistant to at least
-one antibiotic. It is evident that this percentage has likely increased until now, underscoring the urgency
-of addressing this topic. Another study published in 2022 successfully compiled a dataset containing mass
-spectrometer results from more than 300’000 samples of bacteria and fungi. This dataset was then used to
-train a machine learning model capable of predicting whether a bacteria is resistant to a specific type of
-antibiotic; with the ultimate goal of prescribing the most effective treatment to a patient \citep{datasetExplaination}. In this
-project, we only selected the samples used to train for the resistance to Ceftriaxone of Escherichia Coli,
-with the aim of building and testing different models onto real-world scenarios.
-\textbf{\textit{We aim to predict Escherichia coli Ceftriaxone resistance using MALDI-TOF spectra. Our hypothesis is that classical machine learning algorithms can achieve clinically relevant performance (ROC AUC > 0.85).}}
+Antibiotic resistance is a rapidly escalating global health threat, significantly complicating the treatment of bacterial infections and leading to higher mortality, morbidity, and healthcare costs worldwide. Recent data underscore the severity of this issue; for example, a systematic review conducted by \citet{IranBacteria} revealed that 87.5\% of bacterial isolates obtained from clinical specimens in Northern Iran showed resistance to at least one commonly prescribed antibiotic. Given ongoing selective pressure, this alarming prevalence is likely even higher today, emphasizing the critical need for effective diagnostic tools to rapidly identify resistant strains and guide therapeutic decisions.
+
+Matrix-Assisted Laser Desorption/Ionization Time-of-Flight (MALDI-TOF) mass spectrometry has emerged as a powerful technique for rapid microbial identification and characterization. A recent large-scale study compiled MALDI-TOF mass spectra from over 300,000 bacterial and fungal samples and successfully applied machine learning techniques to predict antimicrobial resistance phenotypes directly from these spectra \citep{datasetExplaination}. Leveraging such techniques could significantly reduce the time required for identifying resistance profiles compared to traditional phenotypic testing methods.
+
+In this project, we specifically focus on evaluating the predictive capabilities of classical machine learning models—Support Vector Machine (SVM), Logistic Regression, Random Forest, and k-Nearest Neighbors (kNN)—for detecting Ceftriaxone resistance in \textit{Escherichia coli} using MALDI-TOF spectra from the publicly available DRIAMS dataset. Our primary aim is to assess the real-world applicability and performance of these machine learning algorithms in accurately distinguishing Ceftriaxone-resistant strains from sensitive ones.
+
+The scientific hypothesis tested in this study is that classical machine learning algorithms, trained on MALDI-TOF spectral data, can achieve clinically relevant performance (ROC AUC > 0.85) in predicting Ceftriaxone resistance in \textit{Escherichia coli}.
 
 \section{Methods}
 
