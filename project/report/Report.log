@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.26)  15 JUN 2025 17:57
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.26)  15 JUN 2025 20:02
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -349,14 +349,7 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count299
 \l__pdf_internal_box=\box54
 )
-(./Report.aux
-
-LaTeX Warning: Label `fig:rf_confusion_matrix' multiply defined.
-
-
-LaTeX Warning: Label `fig:rf_confusion_matrix' multiply defined.
-
-)
+(./Report.aux)
 \openout1 = `Report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
@@ -594,7 +587,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [5]
 
 [6 <./confusion_matrix_SVM.png>]
-<confusion_matrix_Random_Forest.png, id=168, 433.62pt x 433.62pt>
+<confusion_matrix_Random_Forest.png, id=169, 433.62pt x 433.62pt>
 File: confusion_matrix_Random_Forest.png Graphic file (type png)
 <use confusion_matrix_Random_Forest.png>
 Package pdftex.def Info: confusion_matrix_Random_Forest.png  used on input line
@@ -605,19 +598,19 @@ Package pdftex.def Info: confusion_matrix_Random_Forest.png  used on input line
 [7
 
  <./confusion_matrix_Random_Forest.png>]
-<confusion_matrix_Logistic_Regression.png, id=179, 433.62pt x 433.62pt>
+<confusion_matrix_Logistic_Regression.png, id=180, 433.62pt x 433.62pt>
 File: confusion_matrix_Logistic_Regression.png Graphic file (type png)
 <use confusion_matrix_Logistic_Regression.png>
 Package pdftex.def Info: confusion_matrix_Logistic_Regression.png  used on inpu
 t line 249.
 (pdftex.def)             Requested size: 238.49341pt x 238.49835pt.
 
-Underfull \vbox (badness 2856) has occurred while \output is active []
+Underfull \vbox (badness 3557) has occurred while \output is active []
 
 
 
 [8 <./confusion_matrix_Logistic_Regression.png>]
-<confusion_matrix_KNN.png, id=190, 433.62pt x 433.62pt>
+<confusion_matrix_KNN.png, id=193, 433.62pt x 433.62pt>
 File: confusion_matrix_KNN.png Graphic file (type png)
 <use confusion_matrix_KNN.png>
 Package pdftex.def Info: confusion_matrix_KNN.png  used on input line 290.
@@ -633,19 +626,15 @@ Package pdftex.def Info: confusion_matrix_KNN.png  used on input line 290.
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `Report.out' has not changed.
 (rerunfilecheck)             Checksum: 2DDC16A909600DFD6126FA16C2C59205;3543.
  ) 
 Here is how much of TeX's memory you used:
- 13098 strings out of 473190
- 206545 string characters out of 5715800
- 653146 words of memory out of 5000000
- 35928 multiletter control sequences out of 15000+600000
- 593985 words of font info for 182 fonts, out of 8000000 for 9000
+ 13094 strings out of 473190
+ 206551 string characters out of 5715800
+ 653182 words of memory out of 5000000
+ 35930 multiletter control sequences out of 15000+600000
+ 593820 words of font info for 178 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  72i,9n,79p,1131b,564s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
@@ -653,10 +642,10 @@ Here is how much of TeX's memory you used:
 ocal/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texli
 ve/2025/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/te
 xmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Report.pdf (11 pages, 4508657 bytes).
+Output written on Report.pdf (11 pages, 4508882 bytes).
 PDF statistics:
- 258 PDF objects out of 1000 (max. 8388607)
- 220 compressed objects within 3 object streams
+ 263 PDF objects out of 1000 (max. 8388607)
+ 225 compressed objects within 3 object streams
  56 named destinations out of 1000 (max. 500000)
  39127 words of extra memory for PDF output out of 42996 (max. 10000000)
 
