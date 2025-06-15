@@ -329,7 +329,8 @@ Logistic Regression also demonstrated excellent predictive capability, with a re
 
 Random Forest achieved perfect recall (1.000), identifying all resistant cases in the test set. However, this high sensitivity came with a lower precision (0.8235) and ROC AUC (0.8242), indicating more false positives. This suggests RF may be best applied in preliminary screening, where missing resistant cases is more critical than minimizing false alarms.
 
-The k-Nearest Neighbors model attained the highest precision for the resistant class (0.9821) and a solid F1 score (0.9141). Nevertheless, its recall was lower (0.8549), and it posted the lowest ROC AUC (0.7771) among the models, revealing weaker overall class separation. These results suggest that while kNN performs well in high-confidence predictions, it is more prone to misclassifying sensitive cases and may be biased toward the majority class.
+The k-Nearest Neighbors model achieved a precision of 0.8549, a strong F1 score of 0.9141, and a recall of 0.9821 for the resistant class. However, it posted the lowest ROC AUC (0.7771) among all models, indicating reduced discriminative ability across both classes. This suggests that while kNN is highly effective at identifying resistant strains, it may struggle with accurate classification of sensitive cases, likely due to class imbalance and the high dimensionality of the feature space.
+
 
 In summary, SVM provided the best balance across all evaluation metrics and stands out as the most promising candidate for predictive diagnostics in this context. Logistic Regression offers a strong, interpretable alternative, while Random Forest's perfect sensitivity makes it useful for conservative screening. kNN, despite strong precision, appears less suited due to its class imbalance sensitivity and lower discriminative power.
 
