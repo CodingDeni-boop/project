@@ -221,10 +221,10 @@ From the confusion matrix, the following performance metrics were calculated:
 \centering
 \caption{Evaluation Metrics for the RF Model}
 \label{tab:Random Forest Performance Metrics}
-\begin{tabular}{lr}
-\toprule
-\textbf{Metric} & \textbf{Score} \\
-\midrule
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
 ROC AUC   & 0.8192 \\
 Accuracy  & 0.8317 \\
 Precision & 0.8267 \\
@@ -302,11 +302,11 @@ From this, we calculate:
 \hline
 \textbf{Metric} & \textbf{Value} \\
 \hline
-Accuracy  & 0.8510 \\
-Recall (Sensitivity) for Class 1 & 0.8549 \\
-Precision for Class 1 & 0.9821 \\
-F1 Score  & 0.9141 \\
-ROC AUC   & 0.7771 \\
+Accuracy  & 85.1\% \\
+Recall (Sensitivity) for Class 1 & 96.5\% \\
+Precision for Class 1 & 85.1\% \\
+F1 Score  & 90.4\% \\
+ROC AUC   & 0.709 \\
 \hline
 \end{tabular}
 \end{table}
@@ -321,17 +321,18 @@ KNN achieves high accuracy and excellent performance on positive cases, but it i
 
 \subsection{Interpretation of Results}
 
-Our analysis evaluated four classical machine learning models - Logistic Regression (LR), Support Vector Machine (SVM), Random Forest (RF), and k-Nearest Neighbors (kNN) - to predict Ceftriaxone resistance in \textit{Escherichia coli} using MALDI-TOF mass spectrometry data. Each model demonstrated distinct strengths and weaknesses relevant to clinical applications.
+Our analysis evaluated four classical machine learning models—Support Vector Machine (SVM), Logistic Regression (LR), Random Forest (RF), and k-Nearest Neighbors (kNN) - to predict Ceftriaxone resistance in \textit{Escherichia coli} using MALDI-TOF mass spectrometry data. Each model offered unique strengths and trade-offs, highlighting different potential use cases in clinical diagnostics.
 
-Logistic Regression emerged as the top performer, achieving the highest ROC AUC (0.911) and F1 score (0.939). Its superior performance likely resulted from effective feature selection via forward selection and L1 regularization, allowing it to identify a sparse set of biologically significant spectral features strongly associated with resistance phenotypes.
+The Support Vector Machine model emerged as the top overall performer, achieving the highest ROC AUC (0.9149), along with strong precision (0.9408), recall (0.9464), and F1 score (0.9436). This balance across metrics suggests that SVM is highly effective at discriminating between resistant and sensitive strains, making it well-suited for diagnostic decision support where both sensitivity and specificity are essential.
 
-Support Vector Machine also showed robust and balanced predictive performance, with an ROC AUC of 0.9149 and high precision (0.941) and recall (0.946). The optimal hyperparameters for the SVM model - rbf kernel and a C value of 125 - enabled effective handling of complex feature interactions, demonstrating its capability to distinguish resistant and sensitive strains reliably.
+Logistic Regression also performed well, with excellent recall (0.9881) and a high F1 score (0.9379), though its ROC AUC (0.8708) and accuracy (0.8942) were lower than those of the SVM. While it demonstrates robustness and interpretability, its comparatively reduced AUC indicates it may be slightly less reliable at ranking predictions in uncertain cases.
 
-Random Forest provided perfect recall (1.0), identifying all resistant samples correctly, a critical attribute for screening applications where missing a resistant case could lead to severe clinical implications. However, the lower precision (0.827) indicated a trade-off with a higher false-positive rate, suggesting that RF could be ideally suited for initial resistance screening, followed by confirmatory testing with models prioritizing specificity.
+Random Forest achieved a perfect recall (1.000), meaning it successfully identified all resistant samples. However, this came with a notable trade-off in precision (0.8267) and a lower ROC AUC (0.8192). This characteristic makes RF particularly useful in screening scenarios where missing resistant cases is unacceptable, but it may generate more false positives that require follow-up.
 
-Lastly, the k-Nearest Neighbors model displayed relatively lower performance with an ROC AUC of 0.797. Although it achieved a commendable recall (0.958) and F1 score (0.907), the lower overall discrimination capability likely resulted from sensitivity to the high dimensionality and potential scaling issues inherent in spectral data. This outcome underscores the importance of careful preprocessing and feature selection tailored specifically for kNN.
+The k-Nearest Neighbors model showed strong recall (0.965) and F1 score (0.904), but its ROC AUC was substantially lower (0.709), and its performance on negative class prediction was poor. This imbalance indicates that kNN is biased toward the majority class and may struggle in settings requiring reliable discrimination across all classes.
 
-Collectively, these results highlight the importance of aligning model selection and tuning strategies to the dataset characteristics and intended clinical use-case. Logistic Regression and SVM provided balanced and interpretable solutions suitable for direct diagnostic decision-making, while Random Forest's perfect recall could be leveraged in preliminary screening applications. The kNN results stress the need for precise data preprocessing and dimension reduction methods to achieve optimal performance.
+In summary, SVM provided the best balance across all evaluation metrics and stands out as the most promising candidate for predictive diagnostics in this context. Logistic Regression offers a strong, interpretable alternative, while Random Forest's perfect sensitivity makes it useful for conservative screening. kNN, despite good recall, appears less suited due to its class imbalance sensitivity and low discriminative power.
+
 
 \subsection{Comparison to Previous Work}
 
