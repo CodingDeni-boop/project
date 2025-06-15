@@ -225,11 +225,11 @@ From the confusion matrix, the following performance metrics were calculated:
 \hline
 \textbf{Metric} & \textbf{Value} \\
 \hline
-ROC AUC   & 0.8242 \\
-Accuracy  & 0.8269 \\
-Precision & 0.8235 \\
+ROC AUC   & 0.8593 \\
+Accuracy  & 0.8558 \\
+Precision & 0.8507 \\
 Recall    & 1.0000 \\
-F1 Score  & 0.9032 \\
+F1 Score  & 0.9194 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -327,7 +327,7 @@ The Support Vector Machine model emerged as the top overall performer, achieving
 
 Logistic Regression also demonstrated excellent predictive capability, with a recall of 0.9881 and an F1 score of 0.9379. Its precision (0.8925) and ROC AUC (0.8708) were slightly lower than SVM, but still within clinically acceptable ranges. The model's simplicity and interpretability make it a practical choice in settings requiring transparent decision-making.
 
-Random Forest achieved perfect recall (1.000), identifying all resistant cases in the test set. However, this high sensitivity came with a lower precision (0.8235) and ROC AUC (0.8242), indicating more false positives. This suggests RF may be best applied in preliminary screening, where missing resistant cases is more critical than minimizing false alarms.
+Random Forest achieved perfect recall (1.000), identifying all resistant cases in the test set. However, this high sensitivity came with a lower precision (0.8507) and ROC AUC (0.8593), indicating more false positives. This suggests RF may be best applied in preliminary screening, where missing resistant cases is more critical than minimizing false alarms.
 
 The k-Nearest Neighbors model achieved a precision of 0.8549, a strong F1 score of 0.9141, and a recall of 0.9821 for the resistant class. However, it posted the lowest ROC AUC (0.7771) among all models, indicating reduced discriminative ability across both classes. This suggests that while kNN is highly effective at identifying resistant strains, it may struggle with accurate classification of sensitive cases, likely due to class imbalance and the high dimensionality of the feature space.
 
