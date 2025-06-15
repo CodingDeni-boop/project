@@ -52,7 +52,7 @@ Antibiotic resistance is a growing global health threat, requiring fast and accu
 
 Antibiotic resistance is a rapidly escalating global health threat, significantly complicating the treatment of bacterial infections and leading to higher mortality, morbidity, and healthcare costs worldwide. Recent data underscore the severity of this issue; for example, a systematic review conducted by \citet{IranBacteria} revealed that 87.5\% of bacterial isolates obtained from clinical specimens in Northern Iran showed resistance to at least one commonly prescribed antibiotic. Given ongoing selective pressure, this alarming prevalence is likely even higher today, emphasizing the critical need for effective diagnostic tools to rapidly identify resistant strains and guide therapeutic decisions.
 Matrix-Assisted Laser Desorption/Ionization Time-of-Flight (MALDI-TOF) mass spectrometry has emerged as a powerful technique for rapid microbial identification and characterization. A recent large-scale study compiled MALDI-TOF mass spectra from over 300,000 bacterial and fungal samples and successfully applied machine learning techniques to predict antimicrobial resistance phenotypes directly from these spectra \citep{datasetExplaination, Astudillo2024}. Leveraging such techniques could significantly reduce the time required for identifying resistance profiles compared to traditional phenotypic testing methods.
-In this project, we specifically focus on evaluating the predictive capabilities of classical machine learning models—Support Vector Machine (SVM), Logistic Regression, Random Forest, and k-Nearest Neighbors (kNN)—for detecting Ceftriaxone resistance in \textit{Escherichia coli} using MALDI-TOF spectra DRIAMS dataset. Our primary aim is to assess the real-world applicability and performance of these machine learning algorithms in accurately distinguishing Ceftriaxone-resistant strains from sensitive ones.
+In this project, we specifically focus on evaluating the predictive capabilities of classical machine learning models - Support Vector Machine (SVM), Logistic Regression, Random Forest, and k-Nearest Neighbors (kNN) - for detecting Ceftriaxone resistance in \textit{Escherichia coli} using MALDI-TOF spectra DRIAMS dataset. Our primary aim is to assess the real-world applicability and performance of these machine learning algorithms in accurately distinguishing Ceftriaxone-resistant strains from sensitive ones.
 
 The scientific hypothesis tested in this study is that classical machine learning algorithms, trained on MALDI-TOF spectral data, can achieve clinically relevant performance (ROC AUC > 0.85) in predicting Ceftriaxone resistance in \textit{Escherichia coli}.
 
@@ -275,9 +275,9 @@ A particularly interesting finding emerged when reducing the number of features:
 
 Feature selection is highly effective for logistic regression. The model can focus on the essential influencing variables without unnecessary “feature noise” distorting the results.
 
-The reduction minimizes the effect of the curse of dimensionality. In high dimensions, many data points lose their separability, especially in distance-based methods – although logistic regression is less sensitive to high dimensionality than methods like KNN or SVM. Nevertheless, it benefits from excluding irrelevant or highly correlated features.
+The reduction minimizes the effect of the curse of dimensionality. In high dimensions, many data points lose their separability, especially in distance-based methods - although logistic regression is less sensitive to high dimensionality than methods like KNN or SVM. Nevertheless, it benefits from excluding irrelevant or highly correlated features.
 
-The observation that model predictions remained nearly identical despite a massive reduction in feature number speaks to the robustness and generalization ability of logistic regression—at least under the given conditions.
+The observation that model predictions remained nearly identical despite a massive reduction in feature number speaks to the robustness and generalization ability of logistic regression - at least under the given conditions.
 
 \citep{hosmer2013logistic}
 
@@ -321,11 +321,11 @@ KNN achieves high accuracy and excellent performance on positive cases, but it i
 
 \subsection{Interpretation of Results}
 
-Our analysis evaluated four classical machine learning models—Logistic Regression (LR), Support Vector Machine (SVM), Random Forest (RF), and k-Nearest Neighbors (kNN)—to predict Ceftriaxone resistance in \textit{Escherichia coli} using MALDI-TOF mass spectrometry data. Each model demonstrated distinct strengths and weaknesses relevant to clinical applications.
+Our analysis evaluated four classical machine learning models - Logistic Regression (LR), Support Vector Machine (SVM), Random Forest (RF), and k-Nearest Neighbors (kNN) - to predict Ceftriaxone resistance in \textit{Escherichia coli} using MALDI-TOF mass spectrometry data. Each model demonstrated distinct strengths and weaknesses relevant to clinical applications.
 
 Logistic Regression emerged as the top performer, achieving the highest ROC AUC (0.911) and F1 score (0.939). Its superior performance likely resulted from effective feature selection via forward selection and L1 regularization, allowing it to identify a sparse set of biologically significant spectral features strongly associated with resistance phenotypes.
 
-Support Vector Machine also showed robust and balanced predictive performance, with an ROC AUC of 0.9149 and high precision (0.941) and recall (0.946). The optimal hyperparameters for the SVM model—rbf kernel and a C value of 125—enabled effective handling of complex feature interactions, demonstrating its capability to distinguish resistant and sensitive strains reliably.
+Support Vector Machine also showed robust and balanced predictive performance, with an ROC AUC of 0.9149 and high precision (0.941) and recall (0.946). The optimal hyperparameters for the SVM model - rbf kernel and a C value of 125 - enabled effective handling of complex feature interactions, demonstrating its capability to distinguish resistant and sensitive strains reliably.
 
 Random Forest provided perfect recall (1.0), identifying all resistant samples correctly, a critical attribute for screening applications where missing a resistant case could lead to severe clinical implications. However, the lower precision (0.827) indicated a trade-off with a higher false-positive rate, suggesting that RF could be ideally suited for initial resistance screening, followed by confirmatory testing with models prioritizing specificity.
 
