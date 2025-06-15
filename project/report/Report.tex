@@ -93,8 +93,6 @@ We evaluated four classical machine learning models, each briefly described and 
 \subsubsection{Support Vector Machine (SVM)}
 Support Vector Machine (SVM) makes his prediction based on hyperplane divisions on the multidimensional feature space. It is therefore extremely important for the success of the model, to select only the highly explanatory features. 
 
-\textbf{Model Workflow Explanation}
-
 We created a flowchart (Figure \ref{fig:Flowchart of the implemented SVM Model}) which should help visualize the model.
 
 \begin{figure}[h]
@@ -118,6 +116,10 @@ Thanks to pipelining, the same grid search cross validation (5 folds) was used t
 
 The best model was then selected using the average from each fold of the ROC AUC score. 
 
+\hfill\break
+\hfill\break
+
+
 \subsubsection{Random Forest (RF)}
 Random Forest (RF) is an ensemble learning algorithm that builds multiple decision trees during training and outputs the class that is the mode of the classes predicted by individual trees. Random Forest was selected for its robustness to noisy and high-dimensional datasets, ease of use, and inherent handling of non-linear relationships without extensive data preprocessing.
 
@@ -134,10 +136,19 @@ To address the significant class imbalance present in the dataset (81.5\% resist
 Hyperparameter tuning was evaluated using the Receiver Operating Characteristic Area Under the Curve (ROC AUC), specifically selected for its effectiveness in evaluating models trained on imbalanced datasets. This aligns with our aim of achieving clinically relevant predictive performance (ROC AUC > 0.85).
 
 \subsubsection{Logistic Regression}
-Text here
+
+Within the scope of predictive modeling, we tested logistic regression as a simple and interpretable model for binary classification tasks. Despite its simplicity, it showed solid performance in our experiment: with an accuracy of around 0.8942, it clearly outperformed the baseline random guess level of 50\% for a binary target variable. However, accuracy alone reveals little about the true model quality, so we additionally analyzed the confusion matrix.
+
 
 \subsubsection{k-Nearest Neighbors (kNN)}
-Text here
+In our data science project, each team member was tasked with training a different machine learning model on the same dataset. My chosen model is K-Nearest Neighbors (KNN).
+Before training, we applied a basic data filtering technique to reduce dimensionality and improve relevance. Specifically, we removed all variables with more than 80\% correlation to avoid multicollinearity. We did not treat K as a tunable hyperparameter at this stage, but it's important to note that the choice of K has a strong impact on model performance and should ideally be validated. KNN is a lazy learning algorithm, meaning it doesn’t build a model during training. Instead, when it receives a new data point, it:
+\begin{itemize}
+    \item Calculates the distance to all points in the training set (e.g., using Euclidean distance).
+    \item Selects the K closest neighbors.
+    \item Looks at their labels.
+    \item Assigns the most common label among those neighbors to the new data point.
+\end{itemize}
 
 \subsection{Evaluation Metrics}
 Given the highly imbalanced nature of our dataset (81.5\% resistant vs. 18.5\% sensitive samples), standard accuracy alone is insufficient to reliably evaluate predictive performance. To address this, we employed multiple complementary evaluation metrics specifically chosen for their effectiveness in assessing performance on imbalanced data:
@@ -166,16 +177,27 @@ The model that performed the best during cross validation was an SVM with rbf ke
 \end{figure}
 
 The statistics calculated from the confusion matrix (Figure \ref{fig:Confusion Matrix of the SVM})are the following: 
-\begin{itemize}
-  \item Accuracy:   0.9086538461538461
-  \item Precision:   0.9408284023668639
-  \item Recall:   0.9464285714285714
-  \item F1:   0.9436201780415431
-\end{itemize}
+\begin{table}[h!]
+\centering
+\caption{Evaluation Metrics for the Model}
+\label{tab:evaluation_metrics_SVM}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Accuracy  & 0.9087 \\
+Precision & 0.9408 \\
+Recall    & 0.9464 \\
+F1 Score  & 0.9436 \\
+\hline
+\end{tabular}
+\end{table}
 Accuracy is the lowest of the scores, and this is explained by looking at the confusion matrix. The model is quite good at predicting positive bacteria samples, but performs quite worse in predicting negative samples. As accuracy gives the same importance to both positive and negative samples, it is comprehensibly the lowest score. The calculated ROC AUC score was instead a 0.9149. Overall, the model performed reasonably well, however there still might be space for improvements on the hyperparameters.
 Since the filtering process was itself part of the model and caused the model to perform better, it is not only fair, but also right to compare the model with specific feature selection with the other models, which have selected their features in a different way.
 
+\clearpage
 \subsection{Random Forest}
+
 
 The optimal hyperparameter combination found through cross-validation was:
 \begin{itemize}
@@ -219,10 +241,81 @@ We also extracted feature importances from the trained model. The most important
 Overall, Random Forest demonstrated strong generalization performance and robustness to feature selection, with particularly valuable recall in the context of resistance prediction.
 
 \subsection{Logistic Regression}
-Text here
+
+The confusion Matrix for Logistic Regression gave the following results:
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{confusion_matrix_Logistic_Regression.png}
+  \caption{Confusion Matrix for the Logistic Regression classifier on the test dataset.}
+  \label{fig:rf_confusion_matrix}
+\end{figure}
+From these values, we calculate:
+
+\begin{table}[h!]
+\centering
+\caption{Evaluation Metrics for Logistic Regression on Test Data}
+\label{tab:evaluation_metrics_LR_test}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Accuracy       & 0.8942 \\
+Precision      & 0.8925 \\
+Recall         & 0.9881 \\
+F1 Score       & 0.9379 \\
+ROC AUC (Test) & 0.8708 \\
+\hline
+\end{tabular}
+\end{table}
+
+These metrics confirm that logistic regression did not just guess correctly by chance, but was able to learn meaningful patterns from the dataset.
+
+A particularly interesting finding emerged when reducing the number of features: even with only the 10 most important features (instead of the original 100), the prediction performance remained nearly constant. This illustrates two key points:
+
+Feature selection is highly effective for logistic regression. The model can focus on the essential influencing variables without unnecessary “feature noise” distorting the results.
+
+The reduction minimizes the effect of the curse of dimensionality. In high dimensions, many data points lose their separability, especially in distance-based methods – although logistic regression is less sensitive to high dimensionality than methods like KNN or SVM. Nevertheless, it benefits from excluding irrelevant or highly correlated features.
+
+The observation that model predictions remained nearly identical despite a massive reduction in feature number speaks to the robustness and generalization ability of logistic regression—at least under the given conditions.
+
+\citep{hosmer2013logistic}
 
 \subsection{K Nearest Neighbors}
-Text here
+
+To assess the performance of the KNN classifier, we analyzed the confusion matrix and computed key metrics.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{confusion_matrix_KNN.png}
+  \caption{Confusion Matrix for the KNN classifier on the test dataset.}
+  \label{fig:rf_confusion_matrix}
+\end{figure}
+
+From this, we calculate:
+
+\begin{table}[h!]
+\centering
+\caption{Evaluation Metrics with Class Breakdown}
+\label{tab:evaluation_metrics_class1}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Accuracy  & 85.1\% \\
+Recall (Sensitivity) for Class 1 & 96.5\% \\
+Precision for Class 1 & 85.1\% \\
+F1 Score  & 90.4\% \\
+ROC AUC   & 0.709 \\
+\hline
+\end{tabular}
+\end{table}
+
+The model performs well at detecting positive cases (class 1), with a very high recall of 96.5\%. This makes it suitable for applications where missing a positive case is costly.
+However, it misclassified 29 out of 40 negative cases (class 0), correctly identifying only 11, which shows a weakness in detecting negatives.
+Despite a strong F1-score and precision, the ROC AUC of 0.709 indicates that KNN struggles to distinguish between classes overall.
+KNN achieves high accuracy and excellent performance on positive cases, but it is not reliable for detecting negative cases. Its predictive power is skewed toward class 1, which is important to consider depending on the use case. \citep{ibm-knn}
+
 
 \section{Discussion}
 

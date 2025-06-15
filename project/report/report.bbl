@@ -1,9 +1,18 @@
-\begin{thebibliography}{7}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Astudillo et~al.(2024)Astudillo, López-Cortés, Ocque, and
+  et~al.]{Astudillo2024}
+C.~A. Astudillo, X.~A. López-Cortés, E.~Ocque, and et~al.
+\newblock Multi-label classification to predict antibiotic resistance from raw
+  clinical maldi-tof mass spectrometry data.
+\newblock \emph{Scientific Reports}, 14:\penalty0 31283, 2024.
+\newblock \doi{10.1038/s41598-024-82697-w}.
+\newblock URL \url{https://www.nature.com/articles/s41598-024-82697-w}.
 
 \bibitem[Harris et~al.(2020)Harris, Millman, van~der Walt, Gommers, Virtanen,
   Cournapeau, Wieser, Taylor, Berg, Smith, Kern, Picus, Hoyer, van Kerkwijk,
@@ -22,12 +31,24 @@ Charles~R. Harris, K.~Jarrod Millman, St{\'{e}}fan~J. van~der Walt, Ralf
 \newblock \doi{10.1038/s41586-020-2649-2}.
 \newblock URL \url{https://doi.org/10.1038/s41586-020-2649-2}.
 
+\bibitem[Hosmer et~al.(2013)Hosmer, Lemeshow, and
+  Sturdivant]{hosmer2013logistic}
+David~W. Hosmer, Stanley Lemeshow, and Rodney~X. Sturdivant.
+\newblock \emph{Applied Logistic Regression}.
+\newblock Wiley, Hoboken, NJ, 3rd edition, 2013.
+
 \bibitem[Hunter(2007)]{matplotlib}
 J.~D. Hunter.
 \newblock Matplotlib: A 2d graphics environment.
 \newblock \emph{Computing in Science \& Engineering}, 9\penalty0 (3):\penalty0
   90--95, 2007.
 \newblock \doi{10.1109/MCSE.2007.55}.
+
+\bibitem[{IBM}(n.d.)]{ibm-knn}
+{IBM}.
+\newblock What is k-nearest neighbors (k-nn)?, n.d.
+\newblock URL \url{https://www.ibm.com/think/topics/knn}.
+\newblock Accessed: 2025-06-15.
 
 \bibitem[Mihankhah et~al.(2017)Mihankhah, Khoshbakht, Raeisi, and
   Raeisi]{IranBacteria}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.26)  5 JUN 2025 17:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.26)  15 JUN 2025 17:57
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -349,27 +349,34 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count299
 \l__pdf_internal_box=\box54
 )
-(./Report.aux)
+(./Report.aux
+
+LaTeX Warning: Label `fig:rf_confusion_matrix' multiply defined.
+
+
+LaTeX Warning: Label `fig:rf_confusion_matrix' multiply defined.
+
+)
 \openout1 = `Report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -459,26 +466,26 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 44.
+Package hyperref Info: Link coloring OFF on input line 43.
 
 (./Report.out) (./Report.out)
 \@outlinefile=\write3
 \openout3 = `Report.out'.
 
-LaTeX Info: Redefining \microtypecontext on input line 44.
-Package microtype Info: Applying patch `item' on input line 44.
-Package microtype Info: Applying patch `toc' on input line 44.
-Package microtype Info: Applying patch `eqnum' on input line 44.
-Package microtype Info: Applying patch `footnote' on input line 44.
-Package microtype Info: Applying patch `verbatim' on input line 44.
-LaTeX Info: Redefining \microtypesetup on input line 44.
+LaTeX Info: Redefining \microtypecontext on input line 43.
+Package microtype Info: Applying patch `item' on input line 43.
+Package microtype Info: Applying patch `toc' on input line 43.
+Package microtype Info: Applying patch `eqnum' on input line 43.
+Package microtype Info: Applying patch `footnote' on input line 43.
+Package microtype Info: Applying patch `verbatim' on input line 43.
+LaTeX Info: Redefining \microtypesetup on input line 43.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 44.
+LaTeX Info: Redefining \showhyphens on input line 43.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -490,7 +497,7 @@ File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 46.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 45.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -499,7 +506,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 46.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 45.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -508,7 +515,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Trying to load font information for T1+phv on input line 49
+LaTeX Font Info:    Trying to load font information for T1+phv on input line 48
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1phv.fd
@@ -519,82 +526,137 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-Underfull \hbox (badness 10000) in paragraph at lines 77--81
-
- []
-
-
 
 [1
 
 
 {/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}]
-<heatmap.png, id=80, 2160.07pt x 2168.1pt>
+Underfull \hbox (badness 10000) in paragraph at lines 68--71
+
+ []
+
+<heatmap.png, id=121, 2160.07pt x 2168.1pt>
 File: heatmap.png Graphic file (type png)
 <use heatmap.png>
-Package pdftex.def Info: heatmap.png  used on input line 86.
+Package pdftex.def Info: heatmap.png  used on input line 74.
 (pdftex.def)             Requested size: 357.73405pt x 359.04437pt.
-
-Underfull \vbox (badness 6961) has occurred while \output is active []
-
 
 
 [2 <./heatmap.png>]
-<FlowChart.png, id=94, 8210.675pt x 6444.075pt>
+<FlowChart.png, id=132, 8210.675pt x 6444.075pt>
 File: FlowChart.png Graphic file (type png)
 <use FlowChart.png>
-Package pdftex.def Info: FlowChart.png  used on input line 115.
+Package pdftex.def Info: FlowChart.png  used on input line 100.
 (pdftex.def)             Requested size: 397.48499pt x 311.89813pt.
 
 
-[3 <./FlowChart.png>]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
-25.
+LaTeX Warning: `h' float specifier changed to `ht'.
 
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
+12.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-<confusion_matrix_SVM.png, id=104, 433.62pt x 433.62pt>
-File: confusion_matrix_SVM.png Graphic file (type png)
-<use confusion_matrix_SVM.png>
-Package pdftex.def Info: confusion_matrix_SVM.png  used on input line 138.
-(pdftex.def)             Requested size: 238.49341pt x 238.49835pt.
+Underfull \hbox (badness 10000) in paragraph at lines 119--121
+
+ []
 
 
-[4 <./confusion_matrix_SVM.png>] (./Report.bbl
+Underfull \hbox (badness 10000) in paragraph at lines 119--121
+
+ []
+
+
+
+[3]
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 129.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-)
 
-[5{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
-] (./Report.aux)
+
+[4{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
+ <./FlowChart.png>]
+<confusion_matrix_SVM.png, id=150, 433.62pt x 433.62pt>
+File: confusion_matrix_SVM.png Graphic file (type png)
+<use confusion_matrix_SVM.png>
+Package pdftex.def Info: confusion_matrix_SVM.png  used on input line 173.
+(pdftex.def)             Requested size: 238.49341pt x 238.49835pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+
+[5]
+
+[6 <./confusion_matrix_SVM.png>]
+<confusion_matrix_Random_Forest.png, id=168, 433.62pt x 433.62pt>
+File: confusion_matrix_Random_Forest.png Graphic file (type png)
+<use confusion_matrix_Random_Forest.png>
+Package pdftex.def Info: confusion_matrix_Random_Forest.png  used on input line
+ 213.
+(pdftex.def)             Requested size: 238.49341pt x 238.49835pt.
+
+
+[7
+
+ <./confusion_matrix_Random_Forest.png>]
+<confusion_matrix_Logistic_Regression.png, id=179, 433.62pt x 433.62pt>
+File: confusion_matrix_Logistic_Regression.png Graphic file (type png)
+<use confusion_matrix_Logistic_Regression.png>
+Package pdftex.def Info: confusion_matrix_Logistic_Regression.png  used on inpu
+t line 249.
+(pdftex.def)             Requested size: 238.49341pt x 238.49835pt.
+
+Underfull \vbox (badness 2856) has occurred while \output is active []
+
+
+
+[8 <./confusion_matrix_Logistic_Regression.png>]
+<confusion_matrix_KNN.png, id=190, 433.62pt x 433.62pt>
+File: confusion_matrix_KNN.png Graphic file (type png)
+<use confusion_matrix_KNN.png>
+Package pdftex.def Info: confusion_matrix_KNN.png  used on input line 290.
+(pdftex.def)             Requested size: 238.49341pt x 238.49835pt.
+
+
+[9 <./confusion_matrix_KNN.png>] (./Report.bbl
+
+[10])
+
+[11] (./Report.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package rerunfilecheck Info: File `Report.out' has not changed.
-(rerunfilecheck)             Checksum: 7FA738E7130370BA767D016FDD8C16C6;2232.
+(rerunfilecheck)             Checksum: 2DDC16A909600DFD6126FA16C2C59205;3543.
  ) 
 Here is how much of TeX's memory you used:
- 12991 strings out of 473190
- 204505 string characters out of 5715800
- 649445 words of memory out of 5000000
- 35877 multiletter control sequences out of 15000+600000
- 592527 words of font info for 161 fonts, out of 8000000 for 9000
+ 13098 strings out of 473190
+ 206545 string characters out of 5715800
+ 653146 words of memory out of 5000000
+ 35928 multiletter control sequences out of 15000+600000
+ 593985 words of font info for 182 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,8n,79p,1003b,534s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,9n,79p,1131b,564s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/l
 ocal/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texli
 ve/2025/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/te
 xmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Report.pdf (5 pages, 4438463 bytes).
+Output written on Report.pdf (11 pages, 4508657 bytes).
 PDF statistics:
- 156 PDF objects out of 1000 (max. 8388607)
- 131 compressed objects within 2 object streams
- 31 named destinations out of 1000 (max. 500000)
- 39040 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 258 PDF objects out of 1000 (max. 8388607)
+ 220 compressed objects within 3 object streams
+ 56 named destinations out of 1000 (max. 500000)
+ 39127 words of extra memory for PDF output out of 42996 (max. 10000000)
 

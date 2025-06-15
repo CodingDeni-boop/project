@@ -4,45 +4,45 @@ The top-level auxiliary file: report.aux
 The style file: plainnat.bst
 Database file #1: bibliography.bib
 Warning--empty journal in pandas
-You've used 7 entries,
+You've used 10 entries,
             2773 wiz_defined-function locations,
-            658 strings with 7591 characters,
-and the built_in function-call counts, 5494 in all, are:
-= -- 441
-> -- 564
-< -- 3
-+ -- 190
-- -- 183
-* -- 553
-:= -- 922
-add.period$ -- 32
-call.type$ -- 7
-change.case$ -- 82
-chr.to.int$ -- 7
-cite$ -- 15
-duplicate$ -- 143
-empty$ -- 266
-format.name$ -- 190
-if$ -- 1069
+            681 strings with 8138 characters,
+and the built_in function-call counts, 6767 in all, are:
+= -- 551
+> -- 643
+< -- 4
++ -- 217
+- -- 207
+* -- 657
+:= -- 1126
+add.period$ -- 44
+call.type$ -- 10
+change.case$ -- 99
+chr.to.int$ -- 10
+cite$ -- 21
+duplicate$ -- 200
+empty$ -- 369
+format.name$ -- 217
+if$ -- 1333
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 7
-newline$ -- 54
-num.names$ -- 28
-pop$ -- 146
+missing$ -- 10
+newline$ -- 72
+num.names$ -- 40
+pop$ -- 181
 preamble$ -- 1
-purify$ -- 75
+purify$ -- 89
 quote$ -- 0
-skip$ -- 144
+skip$ -- 187
 stack$ -- 0
-substring$ -- 135
-swap$ -- 8
+substring$ -- 156
+swap$ -- 11
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 77
+type$ -- 105
 warning$ -- 1
-while$ -- 31
+while$ -- 41
 width$ -- 0
-write$ -- 118
+write$ -- 163
 (There was 1 warning)
