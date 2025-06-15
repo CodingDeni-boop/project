@@ -172,14 +172,14 @@ The model that performed the best during cross validation was an SVM with rbf ke
 	\centering
 	\includegraphics[width=0.6\textwidth]{confusion_matrix_SVM.png}
 	 \vspace{-1em}
-	\caption{Confusion Matrix of the SVM}
+	\caption{Confusion Matrix for the SVM Model}
     \label{fig:Confusion Matrix of the SVM}
 \end{figure}
 
-The statistics calculated from the confusion matrix (Figure \ref{fig:Confusion Matrix of the SVM})are the following: 
+The statistics calculated from the confusion matrix (Figure \ref{fig:Confusion Matrix of the SVM}) are the following (Table \ref{tab:evaluation_metrics_SVM}): 
 \begin{table}[h!]
 \centering
-\caption{Evaluation Metrics for the Model}
+\caption{Evaluation Metrics for the SVM Model}
 \label{tab:evaluation_metrics_SVM}
 \begin{tabular}{|l|c|}
 \hline
@@ -211,7 +211,7 @@ The optimized Random Forest model was retrained on the entire training set (1178
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.6\textwidth]{confusion_matrix_Random_Forest.png}
-  \caption{Confusion Matrix for the Random Forest classifier on the test dataset.}
+  \caption{Confusion Matrix for the RF Model}
   \label{fig:rf_confusion_matrix}
 \end{figure}
 
@@ -219,7 +219,7 @@ From the confusion matrix, the following performance metrics were calculated:
 
 \begin{table}[h]
 \centering
-\caption{Random Forest Performance Metrics}
+\caption{Evaluation Metrics for the RF Model}
 \label{tab:Random Forest Performance Metrics}
 \begin{tabular}{lr}
 \toprule
@@ -242,19 +242,19 @@ Overall, Random Forest demonstrated strong generalization performance and robust
 
 \subsection{Logistic Regression}
 
-The confusion Matrix for Logistic Regression gave the following results:
+The confusion Matrix for Logistic Regression gave the following results (Figure \ref{fig:lg_confusion_matrix}):
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.6\textwidth]{confusion_matrix_Logistic_Regression.png}
-  \caption{Confusion Matrix for the Logistic Regression classifier on the test dataset.}
-  \label{fig:rf_confusion_matrix}
+  \caption{Confusion Matrix for the LR Model}
+  \label{fig:lg_confusion_matrix}
 \end{figure}
 From these values, we calculate:
 
 \begin{table}[h!]
 \centering
-\caption{Evaluation Metrics for Logistic Regression on Test Data}
+\caption{Evaluation Metrics for the LR Model}
 \label{tab:evaluation_metrics_LR_test}
 \begin{tabular}{|l|c|}
 \hline
@@ -269,7 +269,7 @@ ROC AUC (Test) & 0.8708 \\
 \end{tabular}
 \end{table}
 
-These metrics confirm that logistic regression did not just guess correctly by chance, but was able to learn meaningful patterns from the dataset.
+These metrics from Table \ref{tab:evaluation_metrics_LR_test} confirm that logistic regression did not just guess correctly by chance, but was able to learn meaningful patterns from the dataset.
 
 A particularly interesting finding emerged when reducing the number of features: even with only the 10 most important features (instead of the original 100), the prediction performance remained nearly constant. This illustrates two key points:
 
@@ -283,20 +283,20 @@ The observation that model predictions remained nearly identical despite a massi
 
 \subsection{K Nearest Neighbors}
 
-To assess the performance of the KNN classifier, we analyzed the confusion matrix and computed key metrics.
+To assess the performance of the KNN classifier, we analyzed the confusion matrix (Figure \ref{fig:confusion_matrix_KNN}) and computed key metrics.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.6\textwidth]{confusion_matrix_KNN.png}
-  \caption{Confusion Matrix for the KNN classifier on the test dataset.}
-  \label{fig:rf_confusion_matrix}
+  \caption{Confusion Matrix for the KNN Model}
+  \label{fig:confusion_matrix_KNN}
 \end{figure}
 
 From this, we calculate:
 
 \begin{table}[h!]
 \centering
-\caption{Evaluation Metrics with Class Breakdown}
+\caption{Evaluation Metrics for the KNN Model}
 \label{tab:evaluation_metrics_class1}
 \begin{tabular}{|l|c|}
 \hline
@@ -311,7 +311,7 @@ ROC AUC   & 0.709 \\
 \end{tabular}
 \end{table}
 
-The model performs well at detecting positive cases (class 1), with a very high recall of 96.5\%. This makes it suitable for applications where missing a positive case is costly.
+Table \ref{tab:evaluation_metrics_class1} shows that the model performs well at detecting positive cases (class 1), with a very high recall of 96.5\%. This makes it suitable for applications where missing a positive case is costly.
 However, it misclassified 29 out of 40 negative cases (class 0), correctly identifying only 11, which shows a weakness in detecting negatives.
 Despite a strong F1-score and precision, the ROC AUC of 0.709 indicates that KNN struggles to distinguish between classes overall.
 KNN achieves high accuracy and excellent performance on positive cases, but it is not reliable for detecting negative cases. Its predictive power is skewed toward class 1, which is important to consider depending on the use case. \citep{ibm-knn}
